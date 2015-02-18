@@ -20,10 +20,12 @@ class VagrantConfig
     #
     # Constructor
     #
-    def initialize(config)
+    def initialize(config, settings={})
         @config = config
-        @name = ""
-        @host = ""
+        @name = settings["name"] ||= ""
+        @host = settings["host"] ||= ""
+        @boxname = settings["box_name"] ||= "laravel/homestead"
+        @boxurl = settings["box_url"] ||= "https://vagrantcloud.com/laravel/homestead"
     end
 
     # -------------------------------------------------------------------------
@@ -74,8 +76,8 @@ class VagrantConfig
         @name = ( settings["name"] ||= @hostname.sub(/^(\w)/) {|s| s.capitalize} )
 
         @config.vm.hostname = @hostname
-        @config.vm.box = settings["box_name"] ||= "wheezy64"
-        @config.vm.box_url = settings["box_url"] ||= "http://vagrant.krkn.be/debian-wheezy64.box"
+        @config.vm.box = settings["box_name"] ||= @boxname
+        @config.vm.box_url = settings["box_url"] ||= @boxurl
         
         # Configure A Private Network IP
         if settings.has_key?('private_ip')
