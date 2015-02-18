@@ -215,11 +215,6 @@ echo -en "Deploy project sources"
 pushd /vagrant/public >/dev/null &&
 echo_success || echo_failure
 
-# Composer
-if [ -e "composer.json" ]; then
-    composer update
-fi
-
 # =============================================================================
 
 # End

@@ -7,6 +7,6 @@
     "private_ip": "10.0.1.9",
 
     "provision": [
-        ".vagrant/VagrantEmulsion.sh"
+        "vagrant/VagrantEmulsion.sh"
     ]"
 }
