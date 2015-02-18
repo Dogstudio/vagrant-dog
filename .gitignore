@@ -9,8 +9,8 @@
 *.sublime-*
 
 # Vagrant
-.vagrant/deploy.log
-.vagrant/machines
+.vagrant
+vagrant.json
 
 # Composer
 code/vendor
