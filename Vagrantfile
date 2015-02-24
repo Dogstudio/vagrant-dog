@@ -6,7 +6,7 @@
 #
 #  ============================================================================
 
-require     './.vagrant/VagrantConfig.rb'
+require     './vagrant/VagrantConfig.rb'
 
 #  ----------------------------------------------------------------------------
 Vagrant.configure("2") do |config|
