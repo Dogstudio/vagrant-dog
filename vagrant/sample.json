@@ -4,7 +4,9 @@
 
     "name": "ProjectName",
     "host": "projecthost.dev",
+    "path": "/vagrant/public",
     "private_ip": "10.0.1.9",
+    "public_ip": 200,
 
     "provision": [
         "vagrant/VagrantEmulsion.sh"
