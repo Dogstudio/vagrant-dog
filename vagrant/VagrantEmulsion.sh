@@ -10,7 +10,7 @@
 #
 # =============================================================================
 
-PROJECT_NAME=$1
+PROJECT_NAME=$( echo $1 | sed -e 's/[A-Z]/\L&/g;s/ /_/g')
 PROJECT_HOST=$2
 PROJECT_ROOT=$3
 
