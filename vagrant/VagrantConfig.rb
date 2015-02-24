@@ -15,15 +15,16 @@ require 'yaml'
 # -----------------------------------------------------------------------------
 class VagrantConfig
     
-    attr_accessor :config, :name, :host
+    attr_accessor :config, :name, :host, :path
 
     #
     # Constructor
     #
     def initialize(config, settings={})
         @config = config
-        @name = settings["name"] ||= ""
-        @host = settings["host"] ||= ""
+        @name = settings["name"] ||= "VagrantDog"
+        @host = settings["host"] ||= "vagrantdog.dev"
+        @path = settings["path"] ||= "/vagrant/public"
         @boxname = settings["box_name"] ||= "laravel/homestead"
         @boxurl = settings["box_url"] ||= "https://vagrantcloud.com/laravel/homestead"
     end
@@ -60,7 +61,7 @@ class VagrantConfig
 
         provisionPath.each do |provision|
             if File.exists?(provision)
-                @config.vm.provision :shell, :path => provision, :args => [@name, @hostname], :keep_color => true
+                @config.vm.provision :shell, :path => provision, :args => [@name, @hostname, @path], :keep_color => true
                 
             end
         end
@@ -72,7 +73,8 @@ class VagrantConfig
     # Configure the box
     #
     def configure(settings = {})
-        @hostname = settings["host"] ||= "vagrantkrkn"
+        @hostname = settings["host"] ||= @hostname
+        @path = settings["path"] ||= @path
         @name = ( settings["name"] ||= @hostname.sub(/^(\w)/) {|s| s.capitalize} )
 
         @config.vm.hostname = @hostname

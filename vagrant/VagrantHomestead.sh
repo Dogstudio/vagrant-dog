@@ -9,10 +9,9 @@
 
 PROJECT_NAME=$( echo $1 | sed -e 's/[A-Z]/\L&/g;s/ /_/g')
 PROJECT_HOST=$2
-PROJECT_PATH='/vagrant/code'
+PROJECT_ROOT=$3
 
 LOG_FILE="/vagrant/.vagrant/deploy.log"
-
 DB_ROOT_PASS="secret"
 DB_DUMP_FILE="/vagrant/.vagrant/dump.sql"
 
@@ -124,15 +123,15 @@ echo_line "Projects sources"
 /usr/local/bin/composer self-update >>$LOG_FILE 2>&1 &&
 echo_success "\t- Composer updated" || echo_failure "\t- Error during Composer update"
 
-if [[ ! -d "$PROJECT_PATH" ]]; then
-    mkdir -p "$PROJECT_PATH" && cd "$PROJECT_PATH/.."
-    PROJECT_SUBNAME=$(basename $PROJECT_PATH)
+if [[ ! -d "$PROJECT_ROOT" ]]; then
+    mkdir -p "$PROJECT_ROOT" && cd "$PROJECT_ROOT/.."
+    PROJECT_SUBNAME=$(basename $PROJECT_ROOT)
 
     composer create-project --prefer-dist laravel/laravel $PROJECT_SUBNAME dev-develop >>$LOG_FILE 2>&1 && 
-    echo_success "\t- Project created" || echo_failure "\t- Unable to create project in ${PROJECT_PATH}."
+    echo_success "\t- Project created" || echo_failure "\t- Unable to create project in ${PROJECT_ROOT}."
 
-elif [[ -e "${PROJECT_PATH}/composer.json" ]]; then
-    cd "$PROJECT_PATH/" &&
+elif [[ -e "${PROJECT_ROOT}/composer.json" ]]; then
+    cd "$PROJECT_ROOT/" &&
     
     composer update >>$LOG_FILE 2>&1 &&
     echo_success "\t- Project updated" || echo_failure "\t- Error during project update"
@@ -177,7 +176,7 @@ tee -a /etc/nginx/sites-available/${PROJECT_HOST,,} >>$LOG_FILE <<EOF
 server {
     listen 80;
     server_name ${PROJECT_HOST,,};
-    root "${PROJECT_PATH}/public";
+    root "${PROJECT_ROOT}";
 
     index index.html index.htm index.php;
 
