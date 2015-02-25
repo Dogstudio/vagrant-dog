@@ -62,6 +62,6 @@ alias vhalt='vagrant halt'
 alias vdestroy='vagrant destroy'
 alias vrestart='vhalt && vup'
 alias vssh='vagrant ssh'
-alias vstate='vagrant global-status'
+alias vstate='vagrant global-status'" >> ~/.bashrc
 ```
 
