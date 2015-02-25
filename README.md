@@ -55,13 +55,19 @@ _Ex:_
 
 Pour faciliter l'utilisation, on peut ajouter les commandes Vagrant au `.bashrc` (ou `.bash_aliases`)
 
+_Il suffit de copier/coller cette commande complète dans le terminal._
+
 ```bash
-echo "#Vagrant
+echo "\n#Vagrant
 alias vup='vagrant up'
 alias vhalt='vagrant halt'
 alias vdestroy='vagrant destroy'
 alias vrestart='vhalt && vup'
 alias vssh='vagrant ssh'
 alias vstate='vagrant global-status'" >> ~/.bashrc
+source ~/.bashrc
 ```
 
+La première commande permet d'extraire les fichiers du projet "Vagrant" à la racine du projet ; on peut également l'ajouter en tant qu'Alias : 
+
+    echo "git archive --remote git@gitlab.dogstudio.be:devtools/vagrantdog.git master | tar -x -C ./" >> ~/.bashrc && source ~/.bashrc
