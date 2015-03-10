@@ -56,17 +56,18 @@ test $(which java) && echo_done $SLINE || ( apt-get install -y openjdk-7-jre-hea
 
 SLINE="\t- Download"
 SLINE2="\t- Installation"
-if [[ -z ' /etc/init.d/elasticsearch' ]]; then
-    cd /tmp
+if [[ ! -f /etc/init.d/elasticsearch ]]; then
+    pushd /tmp >>$LOG_FILE
     wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.4.4.deb >>$LOG_FILE 2>&1 && echo_success $SLINE || echo_failure $SLINE
     dpkg -i elasticsearch-1.4.4.deb >>$LOG_FILE 2>&1 && echo_success $SLINE2 || echo_failure $SLINE2
+
+    # set as an auto boot service
+    update-rc.d elasticsearch defaults  >>$LOG_FILE 2>&1
+    popd >>$LOG_FILE
 else
     echo_skip $SLINE
     echo_done $SLINE2
 fi
-
-# set as an auto boot service
-update-rc.d elasticsearch defaults 95 10 >>$LOG_FILE 2>&1
 
 SLINE="\t- Start"
 service elasticsearch start >>$LOG_FILE 2>&1 && echo_success $SLINE || echo_failure $SLINE
