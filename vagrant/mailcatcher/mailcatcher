@@ -1,0 +1,33 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          mailcatcher
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     0 1 2 3 4 5
+# Default-Stop:      0 6
+# Short-Description: Start mailcatcher daemon at boot time
+# Description:       Enable service provided by mailcatcher on all ip.
+### END INIT INFO
+
+start() {
+	echo "Starting MailCatcher"
+	mailcatcher --ip=0.0.0.0
+}
+
+stop() {
+	echo "Stopping MailCatcher"
+	pkill -9 mailcatcher
+}
+
+case "$1" in
+	start)
+		start
+		;;
+	stop)
+		stop
+		;;
+	*)
+		echo "Usage: $0 {start|stop}"
+		exit 1
+		;;
+esac

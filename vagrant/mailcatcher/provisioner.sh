@@ -46,16 +46,19 @@ gem install mailcatcher >>$LOG_FILE 2>&1 && echo_success $SLINE || echo_failure 
 
 SLINE="\t- Mailcatcher php mod"
 # Add config to mods-available for PHP
-echo "sendmail_path = /usr/bin/env $(which catchmail)" | tee /etc/php5/mods-available/mailcatcher.ini &&
+echo "sendmail_path = /usr/bin/env mailcatcher --http-ip=0.0.0.0 --smtp-ip=0.0.0.0" | tee /etc/php5/mods-available/mailcatcher.ini &&
 # Enable sendmail config for all php SAPIs (apache2, fpm, cli)
 php5enmod mailcatcher &&
 # Restart Apache if using mod_php
 service apache2 restart >>$LOG_FILE 2>&1 && echo_success $SLINE || echo_failure $SLINE
 
 SLINE="\t- Mailcatcher start on boot"
-cp /vagrant/vagrant/mailcatcher/mailcatcher.d /etc/init.d/mailcatcher.d &&
-sed -i -e  "s/__private_ip__/$PRIVATE_IP/g" /etc/init.d/mailcatcher.d >>$LOG_FILE 2>&1 &&
-chmod a+x /etc/init.d/mailcatcher.d >>$LOG_FILE 2>&1 &&
-echo_success $SLINE || echo_failure $SLINE
+cp /vagrant/vagrant/mailcatcher/mailcatcher /etc/init.d/mailcatcher &&
+chmod a+x /etc/init.d/mailcatcher &&
+# set as an auto boot service
+update-rc.d mailcatcher defaults >>$LOG_FILE 2>&1 && echo_success $SLINE || echo_failure $SLINE
+
+SLINE="\t- Mailcatcher start"
+/etc/init.d/mailcatcher start >>$LOG_FILE 2>&1 && echo_success $SLINE || echo_failure $SLINE
 
 # =============================================================================
