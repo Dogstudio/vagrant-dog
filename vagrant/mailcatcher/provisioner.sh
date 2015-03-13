@@ -46,7 +46,7 @@ gem install mailcatcher >>$LOG_FILE 2>&1 && echo_success $SLINE || echo_failure 
 
 SLINE="\t- Mailcatcher php mod"
 # Add config to mods-available for PHP
-echo "sendmail_path = /usr/bin/env mailcatcher --http-ip=0.0.0.0 --smtp-ip=0.0.0.0" | tee /etc/php5/mods-available/mailcatcher.ini &&
+echo "sendmail_path = /usr/bin/env catchmail --smtp-ip 0.0.0.0 -f mailcatcher@vagrant.dev" | tee /etc/php5/mods-available/mailcatcher.ini &&
 # Enable sendmail config for all php SAPIs (apache2, fpm, cli)
 php5enmod mailcatcher &&
 # Restart Apache if using mod_php
