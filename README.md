@@ -86,10 +86,10 @@ Le dossier doit comporter au minimum :
 Pour utiliser un provisioner additionnel, il faut l'ajouter dans le tableau 'provision' du fichier vagrant.json
 
 ```json
-    "provision": [
-        "vagrant/VagrantEmulsion.sh",
-        "vagrant/mailcatcher/provisioner.sh" <== permet d'ajouter mailcatcher à la vagrant
-    ]
+"provision": [
+    "vagrant/VagrantEmulsion.sh",
+    "vagrant/mailcatcher/provisioner.sh" <== permet d'ajouter mailcatcher à la vagrant
+]
 ```
 
 
