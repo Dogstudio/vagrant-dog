@@ -1,13 +1,13 @@
 # Vargant for Dogs
 
-_Vagrantfile_ et _Boxes_ pour le développement des projets. 
+_Vagrantfile_ et _Boxes_ pour le développement des projets.
 
 ## Utilisation
 
 > Il suffit de copier les fichiers et de modifier la configuration JSON.
 
-Comme on a pas besoin du versionning de ce projet, on commence par exporter les fichiers à la racine de notre projet. 
-  
+Comme on a pas besoin du versionning de ce projet, on commence par exporter les fichiers à la racine de notre projet.
+
     git archive --remote git@gitlab.dogstudio.be:devtools/vagrantdog.git master | tar -x -C ./
 
 Dans le répertoire `vagrant`, on adapte les paramètres du fichier `sample.json` (voir plus bas pour les détails).
@@ -37,14 +37,14 @@ Le fichier JSON permet de fournir les paramètres spécifiques à la VM:
 * `public_ip` : adresse IP public (accessible depuis l'extérieur).
 * `provision` : **tableau** reprenant les chemins des scripts (SH) de provisioning.
 
-### PublicIP 
+### PublicIP
 
 Pour l'adresse IP publique, il est possible de spécifier un entier, ex: 123 (au lieu d'une IP).
 
-Dans ce cas, le script détectera l'adresse IP de l'hôte et utilisera l'entier pour générer l'adresse publique dans le même range que l'hôte. 
+Dans ce cas, le script détectera l'adresse IP de l'hôte et utilisera l'entier pour générer l'adresse publique dans le même range que l'hôte.
 C'est particulièrement utile dans le cas des laptops qui change de range réseau et de bridge suivant l'endroit de connexion.
 
-_Ex:_ 
+_Ex:_
 
 * `public_ip` : 200
 * Détection de l'inteface de l'hôte : `en0: Wifi Airport`
@@ -68,6 +68,28 @@ alias vstate='vagrant global-status'" >> ~/.bashrc
 source ~/.bashrc
 ```
 
-La première commande permet d'extraire les fichiers du projet "Vagrant" à la racine du projet ; on peut également l'ajouter en tant qu'Alias : 
+La première commande permet d'extraire les fichiers du projet "Vagrant" à la racine du projet ; on peut également l'ajouter en tant qu'Alias :
 
     echo "git archive --remote git@gitlab.dogstudio.be:devtools/vagrantdog.git master | tar -x -C ./" >> ~/.bashrc && source ~/.bashrc
+
+## Provisioners additionnels
+
+Les provisioners additionnels se trouvent le dossier vagrant.
+
+Exemple : vagrant/mailcatcher
+
+Le dossier doit comporter au minimum :
+
+* un fichier provisioner.sh
+* un fichier README.md décrivant au mieux ce qu'apporte ce provisioner (port du service installé, ...)
+
+Pour utiliser un provisioner additionnel, il faut l'ajouter dans le tableau 'provision' du fichier vagrant.json
+
+```json
+    "provision": [
+        "vagrant/VagrantEmulsion.sh",
+        "vagrant/mailcatcher/provisioner.sh" <== permet d'ajouter mailcatcher à la vagrant
+    ]
+```
+
+
