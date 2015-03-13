@@ -15,6 +15,7 @@ Mailcatcher est un serveur SMTP qui intercepte n'importe quel mail qui lui est e
     "vagrant/VagrantEmulsion.sh",
     "vagrant/mailcatcher/provisioner.sh"
 ]
+```
 
 * Provisionner la vagrant
 
@@ -22,7 +23,7 @@ Mailcatcher est un serveur SMTP qui intercepte n'importe quel mail qui lui est e
 vagrant up
 -- ou --
 vagrant provision
-
+```
 * Le client http sera disponible sur le port 1080. Il permet de consulter instantanément les mails envoyés depuis une application
 
 #### Notes
