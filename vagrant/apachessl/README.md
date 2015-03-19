@@ -13,7 +13,7 @@ This provisioner enables the SSL support on your vagrant box. Enjoy !
 ```json
 "provision": [
     "vagrant/VagrantEmulsion.sh",
-    "vagrant/mailcatcher/provisioner.sh"
+    "vagrant/apachessl/provisioner.sh"
 ]
 ```
 
