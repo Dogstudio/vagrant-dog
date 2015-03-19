@@ -1,4 +1,4 @@
-# Vargant for Dogs
+# Vagrant for Dogs
 
 ## SSL mod for Apache2
 

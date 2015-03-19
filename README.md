@@ -1,4 +1,4 @@
-# Vargant for Dogs
+# Vagrant for Dogs
 
 _Vagrantfile_ et _Boxes_ pour le développement des projets.
 
