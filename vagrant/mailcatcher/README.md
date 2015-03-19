@@ -8,7 +8,7 @@ Mailcatcher est un serveur SMTP qui intercepte n'importe quel mail qui lui est e
 
 #### Installation
 
-* Ajouter "vagrant/mailcatcher/mailcatcher.sh" dans la propriété "provision" du fichier vagrant.json
+* Ajouter "vagrant/mailcatcher/provisioner.sh" dans la propriété "provision" du fichier vagrant.json
 
 ```json
 "provision": [
