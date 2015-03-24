@@ -39,20 +39,10 @@ echo_success $SLINE || echo_failure $SLINE
 
 # Setup xdebug.ini
 SLINE="\t- Setup xdebug.ini"
-cat /vagrant/vagrant/xdebug/xdebug.ini >> /etc/php5/mods-available/xdebug.ini && echo_success $SLINE || echo_failure $SLINE
+cat /vagrant/vagrant/xdebug/xdebug.ini >> /etc/php5/mods-available/xdebug.ini && 
+echo_success $SLINE || echo_failure $SLINE
 
 # Restart Apache
 SLINE="\t- Restarting apache"
-service apache2 restart >>$LOG_FILE 2>&1 && echo_success $SLINE || echo_failure $SLINE
-
-
-#SLINE="\t- Mailcatcher start on boot"
-#cp /vagrant/vagrant/mailcatcher/mailcatcher /etc/init.d/mailcatcher &&
-#chmod a+x /etc/init.d/mailcatcher &&
-## set as an auto boot service
-#update-rc.d mailcatcher defaults >>$LOG_FILE 2>&1 && echo_success $SLINE || echo_failure $SLINE
-#
-#SLINE="\t- Mailcatcher start"
-#/etc/init.d/mailcatcher start >>$LOG_FILE 2>&1 && echo_success $SLINE || echo_failure $SLINE
-
-# =============================================================================
+service apache2 restart >>$LOG_FILE 2>&1 && 
+echo_success $SLINE || echo_failure $SLINE
