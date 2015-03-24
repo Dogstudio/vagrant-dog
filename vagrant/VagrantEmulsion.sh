@@ -189,8 +189,9 @@ if [[ ! -f /etc/apache2/apache2.conf ]]; then
     SLINE="\t- Configure vHost"
     pushd /etc/apache2/sites-available >>$LOG_FILE &&
     cp default default.back && cp default default.new &&
-    sed -i -e "s|/var/www|${PROJECT_ROOT}|" default.new &&
-    awk '/<Directory "${PROJECT_ROOT}">/,/AllowOverride None/{sub("None", "All",$0)}{print}' default.new > default &&
+    awk '/<Directory \/var\/www/,/AllowOverride None/{sub("None", "All",$0)}{print}' default.new > default &&
+    sed -i -e "s|/var/www|${PROJECT_ROOT}|" default &&
+    
     echo_success $SLINE || echo_failure $SLINE
 
     SLINE="\t- Restart"
