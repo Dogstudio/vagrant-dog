@@ -156,7 +156,7 @@ CREATE USER 'vagrant'@'%' IDENTIFIED BY 'vagrant';
 GRANT ALL PRIVILEGES ON *.* TO 'vagrant'@'localhost';
 GRANT ALL PRIVILEGES ON *.* TO 'vagrant'@'%';
 FLUSH PRIVILEGES;
-CREATE DATABASE IF NOT EXISTS ${PROJECT_NAME,,} CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci';
+CREATE DATABASE IF NOT EXISTS \`${PROJECT_NAME,,}\` CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci';
 EOF
 [ $? -eq 0 ] && echo_success $SLINE || echo_failure $SLINE
 
