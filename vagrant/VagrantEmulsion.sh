@@ -39,10 +39,10 @@ function process_end {
         echo_line "Current IPs :"
         ifconfig | awk -v RS="\n\n" '{ for (i=1; i<=NF; i++) if ($i == "inet" && $(i+1) ~ /^addr:/) address = substr($(i+1), 6); if (address != "127.0.0.1") printf "\r\040\040\040\040%s --> %s\n", $1, address; }'
         
-        echo_success "Deploy completed !"; exit 0
+        echo_success "Deploy completed !"
     fi
 
-    echo_line "${SEP}"
+    echo_line "${SEP}\n"
     exit 0
 }
 
