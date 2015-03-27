@@ -73,7 +73,7 @@ test $(which zip) && echo_done || ( apt-get install -y zip unzip >>$LOG_FILE 2>&
 tee -a /root/.vagrant-scripts >>$LOG_FILE <<EOF
 #! /bin/bash
 function vagrant() {
-    case $1 in
+    case \$1 in
         'halt')
             sudo init 0
             ;;
@@ -104,7 +104,7 @@ alias wget="wget -c"
 alias work='supervisor -w bin,static -e js,jade -i files,node_modules,src,static bin/server.js'
 
 # Vagrant commands
-source .vagrant-scripts
+source /root/.vagrant-scripts
 alias vhalt='vagrant halt'
 
 cd /vagrant
@@ -112,6 +112,7 @@ EOF
 
 cp -f /root/.bashrc /home/vagrant/ && chown vagrant: /home/vagrant/.bashrc &&
 sed -i -e "/PS1/s/31m/32m/" /home/vagrant/.bashrc &&
+sed -i -e "/source/s/root/home\/vagrant/" /home/vagrant/.bashrc &&
 echo_success "\t- Bash & Aliases"
 
 # VIM Config.
