@@ -98,7 +98,7 @@ function vagrant() {
 }
 EOF
 
-cp -f /root/.vagrant-scripts /home/vagrant/ && && chown vagrant: /home/vagrant/.vagrant-scripts &&
+cp -f /root/.vagrant-scripts /home/vagrant/ && chown vagrant: /home/vagrant/.vagrant-scripts &&
 echo_success "\t- Vagrant Commands"
 
 # Prompt and aliases
