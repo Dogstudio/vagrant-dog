@@ -36,11 +36,12 @@ function process_end {
         echo_line "Current IPs :"
         ifconfig | awk -v RS="\n\n" '{ for (i=1; i<=NF; i++) if ($i == "inet" && $(i+1) ~ /^addr:/) address = substr($(i+1), 6); if (address != "127.0.0.1") printf "\r\040\040\040\040%s --> %s\n", $1, address; }'
         
-        echo_success "Deploy completed !"; exit 0
+        echo_success "Deploy completed !"
     fi
 
-    echo_line "${SEP}"
+    echo_line "${SEP}\n"
     exit 0
+}exit 0
 }
 
 # =============================================================================
@@ -69,10 +70,29 @@ test $(which apg) && echo_done || ( apt-get install -y apg >>$LOG_FILE 2>&1 && e
 SLINE="\t- Zip"
 test $(which zip) && echo_done || ( apt-get install -y zip unzip >>$LOG_FILE 2>&1 && echo_success $SLINE || echo_failure $SLINE )
 
+# Vagrant commands from VMs
+tee -a /root/.vagrant-scripts >>$LOG_FILE <<EOF
+#! /bin/bash
+function vagrant() {
+    case \$1 in
+        'halt')
+            sudo init 0
+            ;;
+        *)
+            echo "Oupss. You're in the VM..."
+            ;;
+    esac      
+}
+EOF
+
+cp -f /root/.vagrant-scripts /home/vagrant/ && chown vagrant: /home/vagrant/.vagrant-scripts &&
+echo_success "\t- Vagrant Commands"
+
 # Prompt and aliases
 grep -q 'alias duh' /root/.bashrc || tee -a /root/.bashrc >>$LOG_FILE <<EOF
 # Prompt
 export PS1="\n\[\033[1;31m\][\u@\h \#|\W]\[\033[0m\]\n\[$(tput bold)\]↪ "
+
 # Use colors
 alias ls='ls --color=auto'
 alias grep='grep --color=auto'
@@ -84,11 +104,16 @@ alias tree="find . | sed 's/[^/]*\//|   /g;s/| *\([^| ]\)/+--- \1/'"
 alias wget="wget -c"
 alias work='supervisor -w bin,static -e js,jade -i files,node_modules,src,static bin/server.js'
 
+# Vagrant commands
+source /root/.vagrant-scripts
+alias vhalt='vagrant halt'
+
 cd /vagrant
 EOF
 
 cp -f /root/.bashrc /home/vagrant/ && chown vagrant: /home/vagrant/.bashrc &&
 sed -i -e "/PS1/s/31m/32m/" /home/vagrant/.bashrc &&
+sed -i -e "/source/s/root/home\/vagrant/" /home/vagrant/.bashrc &&
 echo_success "\t- Bash & Aliases"
 
 # VIM Config.
@@ -157,12 +182,12 @@ CREATE USER 'vagrant'@'%' IDENTIFIED BY 'vagrant';
 GRANT ALL PRIVILEGES ON *.* TO 'vagrant'@'localhost';
 GRANT ALL PRIVILEGES ON *.* TO 'vagrant'@'%';
 FLUSH PRIVILEGES;
-CREATE DATABASE IF NOT EXISTS ${PROJECT_NAME} CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci';
+CREATE DATABASE IF NOT EXISTS \${PROJECT_NAME,,}\` CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci';
 EOF
 echo_success $SLINE
 
 if [ -e "$DB_DUMP_FILE" ]; then
-    mysql -u"root" -p"${DB_ROOT_PASS}" "${PROJECT_NAME}" < $DB_DUMP_FILE
+    mysql -u"root" -p"${DB_ROOT_PASS}" "${PROJECT_NAME,,}" < $DB_DUMP_FILE
     echo_done "\t- Populate DB with old dump."
 fi
 

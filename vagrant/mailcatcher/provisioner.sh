@@ -35,6 +35,9 @@ function echo_done    { echo -en "${CLL}$*\033[69G\033[0;39m[  \033[1;34mDONE\03
 # MAILCATCHER
 echo_line "Mailcatcher"
 
+SLINE="\t- Mailutils"
+apt-get install -y mailutils >>$LOG_FILE 2>&1 && echo_success $SLINE || echo_failure
+
 SLINE="\t- Ruby"
 test $(which ruby) && echo_done $SLINE || ( apt-get install -y ruby-full >>$LOG_FILE 2>&1 && echo_success $SLINE || echo_failure )
 
