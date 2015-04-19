@@ -20,12 +20,13 @@ class VagrantConfig
     #
     def initialize(config, settings={})
         @config = config
-        @name = settings["name"] ||= "VagrantDog"
-        @host = settings["host"] ||= "vagrantdog.dev"
-        @path = settings["path"] ||= "/vagrant/public"
+        @vmname = settings["name"] ||= "VagrantDog"
+        @hostname = settings["host"] ||= @vmname.downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '')
+
+        @path = settings["path"] ||= "/vagrant/"
         @private_ip = settings["private_ip"] ||= "192.168.10.10"
-        @boxname = settings["box_name"] ||= "laravel/homestead"
-        @boxurl = settings["box_url"] ||= "https://vagrantcloud.com/laravel/homestead"
+        @boxname = settings["box_name"] ||= "wheezy64"
+        @boxurl = settings["box_url"] ||= "http://vagrantbox.dogstudio.be/debian-wheezy64.box"
     end
 
     # -------------------------------------------------------------------------
@@ -60,7 +61,7 @@ class VagrantConfig
 
         provisionPath.each do |provision|
             if File.exists?(provision)
-                @config.vm.provision :shell, :path => provision, :args => [@name, @hostname, @path, @private_ip], :keep_color => true
+                @config.vm.provision :shell, :path => provision, :args => [@hostname, @path, @private_ip], :keep_color => true
 
             end
         end
@@ -72,9 +73,11 @@ class VagrantConfig
     # Configure the box
     #
     def configure(settings = {})
-        @hostname = settings["host"] ||= @hostname
+
+        @vmname = settings["name"] ||= @vmname
+        @hostname = settings["host"] ||= @vmname.downcase.strip.gsub(' ', '-').gsub(/[^\w-]/, '')
+
         @path = settings["path"] ||= @path
-        @name = ( settings["name"] ||= @hostname.sub(/^(\w)/) {|s| s.capitalize} )
         @private_ip = settings["private_ip"] ||= @private_ip
 
         @config.vm.hostname = @hostname
@@ -83,7 +86,7 @@ class VagrantConfig
 
         # Configure A Private Network IP
         if settings.has_key?('private_ip')
-            @config.vm.network :private_network, ip: settings["private_ip"] ||= "192.168.10.10"
+            @config.vm.network :private_network, ip: @private_ip
         end
 
         # Configure A Public Network
@@ -117,7 +120,7 @@ class VagrantConfig
 
         # Configure A Few VirtualBox Settings
         @config.vm.provider "virtualbox" do |vb|
-            vb.name = @name
+            vb.name = @vmname
 
             vb.customize ["modifyvm", :id, "--memory", settings["memory"] ||= "2048"]
             vb.customize ["modifyvm", :id, "--cpus", settings["cpus"] ||= "1"]
@@ -129,7 +132,6 @@ class VagrantConfig
 
         # Some port forwarding
         config.vm.network "forwarded_port", guest: 3306, host: 33060
-        config.vm.network "forwarded_port", guest: 5432, host: 54320
     end
 
     # -------------------------------------------------------------------------
