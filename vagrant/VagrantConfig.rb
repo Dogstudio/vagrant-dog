@@ -1,10 +1,8 @@
 #
 # Vagrant Configuration Class
 #
-# Freely inspired from "Laravel Homestead"
-#
-# @author   Akarun for KRKN <akarun@krkn.be> and Passtech <akarun@passtech.be>
-# @since    Jan 2014
+# @author   Epagneul for Dogstudio <epagneul@dogstudio.be>
+# @since    April 2015
 #
 #  ============================================================================
 
