@@ -10,8 +10,6 @@ PROJECT_ROOT=$3
 PRIVATE_IP=$4
 
 LOG_FILE="/vagrant/.vagrant/deploy.log"
-DB_ROOT_PASS="vagrant"
-DB_DUMP_FILE="/vagrant/.vagrant/dump.sql"
 
 # =============================================================================
 
@@ -45,7 +43,8 @@ sudo apt-get install -y mongodb-org >>$LOG_FILE 2>&1 && echo_success $SLINE || e
 SLINE="\t- Start mongodb"
 sudo service mongod start >>$LOG_FILE 2>&1 && echo_success $SLINE || echo_failure
 
-if grep -q "waiting for connections on port" /var/log/mongodb/mongod.log
+cat /var/log/mongodb/mongod.log
+if grep "waiting for connections on port" /var/log/mongodb/mongod.log
 then
     echo_done "Mongodb is running"
 else
