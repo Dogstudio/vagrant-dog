@@ -10,13 +10,14 @@
 #
 # =============================================================================
 
-PROJECT_NAME=$( echo $1 | sed -e 's/[A-Z]/\L&/g;s/ /_/g')
-PROJECT_HOST=$2
-PROJECT_ROOT=$3
+PROJECT_HOST=$1
+PROJECT_ROOT=$2
+PROJECT_NAME=$( echo $PROJECT_HOST | sed -e 's/[A-Z]/\L&/g;s/-/_/g')
 
 LOG_FILE="/vagrant/.vagrant/deploy.log"
+README_FILE="/vagrant/README.md"
 DB_ROOT_PASS="vagrant"
-DB_DUMP_FILE="/vagrant/.vagrant/dump.sql"
+DB_DUMP_FILE="/vagrant/database/dump.sql"
 
 # =============================================================================
 
@@ -50,6 +51,15 @@ function process_end {
 
 # Clear LOG
 echo "" > $LOG_FILE
+
+# Prepare README
+grep -q '## Vagrant' $README_FILE || tee -a $README_FILE >>$LOG_FILE <<EOF
+
+---
+
+## Vagrant
+
+EOF
 
 # Update and package list
 echo_line "${SEP}"
@@ -119,6 +129,8 @@ alias wget="wget -c"
 # Vagrant commands
 source /root/.vagrant-scripts
 alias vhalt='vagrant halt'
+alias vdump='mysqldump -uvagrant -pvagrant ${PROJECT_NAME,,} > ${DB_DUMP_FILE}'
+alias vinject='mysql -uvagrant -pvagrant ${PROJECT_NAME,,} < ${DB_DUMP_FILE}'
 
 cd /vagrant
 EOF
@@ -181,7 +193,8 @@ GRANT ALL PRIVILEGES ON *.* TO 'vagrant'@'%';
 FLUSH PRIVILEGES;
 CREATE DATABASE IF NOT EXISTS \`${PROJECT_NAME,,}\` CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci';
 EOF
-[ $? -eq 0 ] && echo_success $SLINE || echo_failure $SLINE
+
+
 
 if [ -e "$DB_DUMP_FILE" ]; then
     SLINE="\t- Populate DB with old dump."
