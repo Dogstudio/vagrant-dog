@@ -37,6 +37,11 @@ Le fichier JSON permet de fournir les paramètres spécifiques à la VM:
 * `public_ip` : adresse IP public (accessible depuis l'extérieur).
 * `provision` : **tableau** reprenant les chemins des scripts (SH) de provisioning.
 
+## database/dump.sql
+
+Un dossier database se trouvant à la racine du projet permet, si il contient un fichier appelé **dump.sql**,
+d'importer automatiquement les données dans la base de données créée automatiquement par le provisioner emulsion.
+
 ### PublicIP
 
 Pour l'adresse IP publique, il est possible de spécifier un entier, ex: 123 (au lieu d'une IP).
