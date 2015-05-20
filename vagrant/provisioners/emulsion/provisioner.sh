@@ -17,7 +17,7 @@ PROJECT_NAME=$( echo $PROJECT_HOST | sed -e 's/[A-Z]/\L&/g;s/-/_/g')
 LOG_FILE="/vagrant/.vagrant/deploy.log"
 README_FILE="/vagrant/README.md"
 DB_ROOT_PASS="vagrant"
-DB_DUMP_FILE="/vagrant/.vagrant/dump.sql"
+DB_DUMP_FILE="/vagrant/database/dump.sql"
 
 # =============================================================================
 
@@ -129,6 +129,8 @@ alias wget="wget -c"
 # Vagrant commands
 source /root/.vagrant-scripts
 alias vhalt='vagrant halt'
+alias vdump='mysqldump -uvagrant -pvagrant ${PROJECT_NAME,,} > ${DB_DUMP_FILE}'
+alias vinject='mysql -uvagrant -pvagrant ${PROJECT_NAME,,} < ${DB_DUMP_FILE}'
 
 cd /vagrant
 EOF

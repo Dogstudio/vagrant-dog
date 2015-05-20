@@ -11,5 +11,5 @@ require './vagrant/VagrantConfig.rb'
 #  ----------------------------------------------------------------------------
 Vagrant.configure("2") do |config|
     vConf = VagrantConfig.new config
-    vConf.loadConfig     'vagrant.json'
+    vConf.loadConfig 'vagrant.json'
 end
