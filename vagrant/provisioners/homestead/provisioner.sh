@@ -13,7 +13,7 @@ PROJECT_ROOT=$3
 
 LOG_FILE="/vagrant/.vagrant/deploy.log"
 DB_ROOT_PASS="secret"
-DB_DUMP_FILE="/vagrant/.vagrant/dump.sql"
+DB_DUMP_FILE="/vagrant/database/dump.sql"
 
 # =============================================================================
 
@@ -107,6 +107,8 @@ alias work='supervisor -w bin,static -e js,jade -i files,node_modules,src,static
 # Vagrant commands
 source /root/.vagrant-scripts
 alias vhalt='vagrant halt'
+alias vdump='mysqldump -uvagrant -pvagrant ${PROJECT_NAME,,} > ${DB_DUMP_FILE}'
+alias vinject='mysql -uvagrant -pvagrant ${PROJECT_NAME,,} < ${DB_DUMP_FILE}'
 
 cd /vagrant
 EOF

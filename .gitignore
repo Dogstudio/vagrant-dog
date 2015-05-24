@@ -11,6 +11,7 @@
 # Vagrant
 .vagrant
 vagrant.json
+vagrant/vendor
 
 # Composer
 code/vendor
