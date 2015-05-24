@@ -29,19 +29,22 @@ function echo_done    { echo -en "${CLL}$*\033[69G\033[0;39m[  \033[1;34mDONE\03
 # MONGODB
 echo_line "Nodejs"
 
-SLINE="\t- Dependencies"
-sudo apt-get install -y -q git-core curl build-essential openssl libssl-dev >>$LOG_FILE 2>&1 && echo_success $SLINE || echo_failure
+SLINE="\t- Update system"
+sudo apt-get update -y >>$LOG_FILE 2>&1 && echo_success $SLINE || echo_failure
 
-SLINE="\t- Get"
+SLINE="\t- Get dependencies"
+sudo apt-get install -y git-core curl build-essential openssl libssl-dev >>$LOG_FILE 2>&1 && echo_success $SLINE || echo_failure
+
+SLINE="\t- Get nodejs"
 sudo curl -sL https://deb.nodesource.com/setup | sudo bash >>$LOG_FILE 2>&1 && echo_success $SLINE || echo_failure
 
-SLINE="\t- Install"
+SLINE="\t- Install nodejs"
 sudo apt-get install -y nodejs >>$LOG_FILE 2>&1 && echo_success $SLINE || echo_failure
 
 SLINE="\t- Node version: "
 echo_done $SLINE `node -v`
 
-SLINE="\t- Nodemon"
+SLINE="\t- Install nodemon"
 sudo npm install -g nodemon >>$LOG_FILE 2>&1 && echo_success $SLINE || echo_failure
 
 SLINE="\t- Npm version: "
