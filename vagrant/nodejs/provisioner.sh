@@ -47,5 +47,8 @@ echo_done $SLINE `node -v`
 SLINE="\t- Install nodemon"
 sudo npm install -g nodemon >>$LOG_FILE 2>&1 && echo_success $SLINE || echo_failure
 
+SLINE="\t- Install pm2"
+sudo npm install -g pm2 >>$LOG_FILE 2>&1 && echo_success $SLINE || echo_failure
+
 SLINE="\t- Npm version: "
 echo_done $SLINE `npm -v`
