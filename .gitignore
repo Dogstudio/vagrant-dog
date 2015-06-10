@@ -14,6 +14,7 @@ vagrant.json
 
 # Composer
 public/vendor
+vagrant/vendor
 
 # Emulsion
 public/files/library/**/_mini
