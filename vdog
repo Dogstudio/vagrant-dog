@@ -6,7 +6,6 @@ require __DIR__ . '/vagrant/vendor/autoload.php';
 use Symfony\Component\Console\Application;
 use Commands\EmulsionCommand;
 
-
 $application = new Application();
 $application->add(new EmulsionCommand());
 $application->run();

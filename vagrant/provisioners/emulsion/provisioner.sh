@@ -10,6 +10,8 @@
 #
 # =============================================================================
 
+# VARS
+
 PROJECT_HOST=$1
 PROJECT_ROOT=$2
 PROJECT_NAME=$( echo $PROJECT_HOST | sed -e 's/[A-Z]/\L&/g;s/-/_/g')
@@ -18,6 +20,49 @@ LOG_FILE="/vagrant/.vagrant/deploy.log"
 README_FILE="/vagrant/README.md"
 DB_ROOT_PASS="vagrant"
 DB_DUMP_FILE="/vagrant/database/dump.sql"
+
+
+# SKELS
+
+VHOST_SKEL="<VirtualHost *:80>
+    ServerAdmin webmaster@localhost
+
+    DocumentRoot /vagrant/dev/public
+
+    <Directory />
+        Options FollowSymLinks
+        AllowOverride None
+    </Directory>
+    
+    <Directory /vagrant/dev/public/>
+        Options Indexes FollowSymLinks MultiViews
+        AllowOverride All
+        Order allow,deny
+        allow from all
+    </Directory>
+
+    ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
+    <Directory \"/usr/lib/cgi-bin\">
+        AllowOverride None
+        Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
+        Order allow,deny
+        Allow from all
+    </Directory>
+
+    LogLevel warn
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+    Alias \"/cut\" \"/vagrant/cut/public\"
+    <Directory \"/vagrant/cut/public\">
+        Options Indexes MultiViews FollowSymLinks
+        AllowOverride All
+        Order allow,deny
+        Allow from all
+    </Directory>
+</VirtualHost>"
+
+
 
 # =============================================================================
 
@@ -70,7 +115,9 @@ echo_success "System Updated" || process_end 1 "Unable to update the system"
 # Sharing fix
 echo "SELINUX=disabled" >> /etc/selinux/config
 
+
 # =============================================================================
+
 
 # Tools
 echo_line "Install Tools\n"
@@ -93,6 +140,10 @@ test $(which git) && echo_done $SLINE || ( apt-get install -y git >>$LOG_FILE 2>
 SLINE="\t- Curl"
 test $(which curl) && echo_done $SLINE || ( apt-get install -y curl >>$LOG_FILE 2>&1 && echo_success $SLINE || echo_failure )
 
+
+# -----------------------------------------------------------------------------
+
+
 # Vagrant commands from VMs
 tee -a /root/.vagrant-scripts >>$LOG_FILE <<EOF
 #! /bin/bash
@@ -110,6 +161,10 @@ EOF
 
 cp -f /root/.vagrant-scripts /home/vagrant/ && chown vagrant: /home/vagrant/.vagrant-scripts &&
 echo_success "\t- Vagrant Commands"
+
+
+# -----------------------------------------------------------------------------
+
 
 # Prompt and aliases
 grep -q 'alias duh' /root/.bashrc || tee -a /root/.bashrc >>$LOG_FILE <<EOF
@@ -161,7 +216,9 @@ sed -e "/PrintLastLog/s/yes/no/" -i /etc/ssh/sshd_config &&
 service ssh restart >>$LOG_FILE 2>&1 &&
 echo_success "\t- SSH config" || echo_failure "\t- SSH config"
 
+
 # -----------------------------------------------------------------------------
+
 
 # MySQL
 echo_line "MySQL"
@@ -195,12 +252,12 @@ CREATE DATABASE IF NOT EXISTS \`${PROJECT_NAME,,}\` CHARACTER SET 'utf8' COLLATE
 EOF
 
 
-
 if [ -e "$DB_DUMP_FILE" ]; then
     SLINE="\t- Populate DB with old dump."
     mysql -u"root" -p"${DB_ROOT_PASS}" "${PROJECT_NAME,,}" < $DB_DUMP_FILE 2>&1 &&
     echo_success $SLINE || echo_failure $SLINE
 fi
+
 
 # -----------------------------------------------------------------------------
 
@@ -222,20 +279,23 @@ if [[ ! -f /etc/apache2/apache2.conf ]]; then
     /etc/init.d/apache2 restart >>$LOG_FILE 2>&1 &&
     echo_success $SLINE || echo_failure $SLINE
 
-    SLINE="\t- Configure vHost"
+
+    SLINE="\t- Default vHost"
+    VHOST_SKEL=$(eval "echo -e \"$(echo -e "$VHOST_SKEL" | sed -e 's/##/$/g')\"")
+
     pushd /etc/apache2/sites-available >>$LOG_FILE &&
-    cp default default.back && cp default default.new &&
-    awk '/<Directory \/var\/www/,/AllowOverride None/{sub("None", "All",$0)}{print}' default.new > default &&
-    sed -i -e "s|/var/www|${PROJECT_ROOT}|" default &&
-    
+    cp default default.back && echo "$VHOST_DEV_SKEL" > default
     echo_success $SLINE || echo_failure $SLINE
 
+    # Restart Apache
     SLINE="\t- Restart"
     /etc/init.d/apache2 restart >>$LOG_FILE 2>&1 &&
     echo_success $SLINE || echo_failure $SLINE
 fi
 
+
 # -----------------------------------------------------------------------------
+
 
 # PHP
 echo_line "PHP"
@@ -248,7 +308,9 @@ SLINE="\t- Configure"
 sed -i -e "/display_errors/s/Off/On/" /etc/php5/apache2/php.ini >>$LOG_FILE 2>&1 &&
 echo_success $SLINE || echo_failure $SLINE
 
+
 # =============================================================================
+
 
 # Composer / Project
 echo_line "Composer & Project"
@@ -266,7 +328,9 @@ SLINE="\t- Project"
 pushd ${PROJECT_ROOT} >/dev/null &&
 echo_success $SLINE || echo_failure $SLINE
 
+
 # =============================================================================
+
 
 # End
 process_end
