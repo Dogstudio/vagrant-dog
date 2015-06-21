@@ -48,7 +48,7 @@ SLINE="\t- Opcache"
 sudo pecl install zendopcache-7.0.2 >>$LOG_FILE 2>&1 && echo_success $SLINE || echo_failure $SLINE
 
 SLINE="\t- Config"
-printf $SCONFIG | sudo tee /etc/php5/mods-available/opcache.ini >>$LOG_FILE 2>&1 && echo_success $SLINE || echo_failure $SLINE
+echo -e $SCONFIG | sudo tee /etc/php5/mods-available/opcache.ini >>$LOG_FILE 2>&1 && echo_success $SLINE || echo_failure $SLINE
 
 SLINE="\t- Symlink"
 sudo ln -s /etc/php5/mods-available/opcache.ini /etc/php5/conf.d/20-opcache.ini >>$LOG_FILE 2>&1 && echo_success $SLINE || echo_failure $SLINE
