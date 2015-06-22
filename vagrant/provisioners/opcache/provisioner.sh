@@ -28,7 +28,7 @@ function echo_done    { echo -en "${CLL}$*\033[69G\033[0;39m[  \033[1;34mDONE\03
 SCONFIG="
 zend_extension=/usr/lib/php5/20100525/opcache.so\n
 opcache.revalidate_freq=0\n
-opcache.validate_timestamps=0\n
+#opcache.validate_timestamps=0\n
 opcache.memory_consumption=192\n
 opcache.interned_strings_buffer=16\n
 opcache.max_accelerated_files=6000\n
@@ -56,5 +56,3 @@ sudo ln -s /etc/php5/mods-available/opcache.ini /etc/php5/conf.d/20-opcache.ini 
 SLINE="\t- Restart apache"
 sudo service apache2 restart >>$LOG_FILE 2>&1 && echo_success $SLINE || echo_failure $SLINE
 
-SLINE="\t- Restart apache"
-cat /vagrant/vagrant/opcache/opcache-gui.ini >> /etc/php5/mods-available/phalcon.ini && >>$LOG_FILE 2>&1 && echo_success $SLINE || echo_failure $SLINE
