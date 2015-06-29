@@ -3,7 +3,7 @@
     "private_ip": "10.0.1.9",
     "public_ip": 200,
     "box_name": "wheezy64",
-    "box_url": "http://vagrant.krkn.be/debian-wheezy64.box",
+    "box_url": "http://vagrantbox.dogstudio.be/debian-wheezy64.box",
 
     "name": "Emulsion",
     "host": "emulsion.dev",
