@@ -1,15 +1,15 @@
 {
-    "name": "Project Title",
-    "private_ip": "10.0.1.9",
-    "public_ip": 200,
-    "box_name": "wheezy64",
-    "box_url": "http://vagrant.krkn.be/debian-wheezy64.box",
+  "name": "Vagrant Box",
 
-    "name": "Emulsion",
-    "host": "emulsion.dev",
-    "path": "/vagrant/",
+  "box_name": "wheezy64",
+  "box_url": "http://vagrantbox.dogstudio.be/debian-wheezy64.box",
+  "path": "/vagrant/",
 
-    "provision": [
-        "vagrant/emulsion/provisoner.sh"
-    ]
+  "host": "vagrantbox.dev",
+  "private_ip": "10.0.1.9",
+  "public_ip": 200,
+
+  "provision": [
+    "vagrant/provisioners/emulsion/provisioner.sh"
+  ]
 }
