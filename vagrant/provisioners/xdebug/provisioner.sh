@@ -39,7 +39,7 @@ echo_success $SLINE || echo_failure $SLINE
 
 # Setup xdebug.ini
 SLINE="\t- Setup xdebug.ini"
-cat /vagrant/vagrant/xdebug/xdebug.ini >> /etc/php5/mods-available/xdebug.ini && 
+cat /vagrant/vagrant/provisioners/xdebug/xdebug.ini >> /etc/php5/mods-available/xdebug.ini &&
 echo_success $SLINE || echo_failure $SLINE
 
 # Restart Apache
