@@ -56,7 +56,7 @@ php5enmod mailcatcher &&
 service apache2 restart >>$LOG_FILE 2>&1 && echo_success $SLINE || echo_failure $SLINE
 
 SLINE="\t- Mailcatcher start on boot"
-cp /vagrant/vagrant/mailcatcher/mailcatcher /etc/init.d/mailcatcher &&
+cp /vagrant/vagrant/provisioners/mailcatcher/mailcatcher /etc/init.d/mailcatcher &&
 chmod a+x /etc/init.d/mailcatcher &&
 # set as an auto boot service
 update-rc.d mailcatcher defaults >>$LOG_FILE 2>&1 && echo_success $SLINE || echo_failure $SLINE
