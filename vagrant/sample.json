@@ -3,7 +3,7 @@
 
   "box_name": "wheezy64",
   "box_url": "http://vagrantbox.dogstudio.be/debian-wheezy64.box",
-  "path": "/vagrant/",
+  "path": "/vagrant/dev/public/",
 
   "host": "vagrantbox.dev",
   "private_ip": "10.0.1.9",
