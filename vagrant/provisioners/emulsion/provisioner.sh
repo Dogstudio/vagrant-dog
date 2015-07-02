@@ -14,6 +14,7 @@
 
 PROJECT_HOST=$1
 PROJECT_ROOT=$2
+PROJECT_CUT_ROOT=$( echo $PROJECT_ROOT | sed -e 's/\/dev/\/cut/g')
 PROJECT_NAME=$( echo $PROJECT_HOST | sed -e 's/[A-Z]/\L&/g;s/[\-\.]/_/g')
 
 LOG_FILE="/vagrant/.vagrant/deploy.log"
@@ -24,7 +25,8 @@ DB_DUMP_FILE="/vagrant/database/dump.sql"
 
 # SKELS
 
-VHOST_SKEL="<VirtualHost *:80>
+if [ -d "$PROJECT_CUT_ROOT" ]; then
+    VHOST_SKEL="<VirtualHost *:80>
     ServerAdmin webmaster@localhost
 
     DocumentRoot $PROJECT_ROOT
@@ -33,7 +35,7 @@ VHOST_SKEL="<VirtualHost *:80>
         Options FollowSymLinks
         AllowOverride None
     </Directory>
-    
+
     <Directory $PROJECT_ROOT>
         Options Indexes FollowSymLinks MultiViews
         AllowOverride All
@@ -49,19 +51,53 @@ VHOST_SKEL="<VirtualHost *:80>
         Allow from all
     </Directory>
 
-    LogLevel warn
-    ErrorLog ${APACHE_LOG_DIR}/error.log
-    CustomLog ${APACHE_LOG_DIR}/access.log combined
-
-    Alias /cut /vagrant/cut/public
-    <Directory /vagrant/cut/public>
+    Alias /cut $PROJECT_CUT_ROOT
+    <Directory $PROJECT_CUT_ROOT>
         Options Indexes MultiViews FollowSymLinks
         AllowOverride All
         Order allow,deny
         Allow from all
     </Directory>
-</VirtualHost>"
 
+    LogLevel warn
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+</VirtualHost>"
+else
+    VHOST_SKEL="<VirtualHost *:80>
+    ServerAdmin webmaster@localhost
+
+    DocumentRoot $PROJECT_ROOT
+
+    <Directory />
+        Options FollowSymLinks
+        AllowOverride None
+    </Directory>
+
+    <Directory $PROJECT_ROOT>
+        Options Indexes FollowSymLinks MultiViews
+        AllowOverride All
+        Order allow,deny
+        allow from all
+    </Directory>
+
+    ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
+    <Directory /usr/lib/cgi-bin>
+        AllowOverride None
+        Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
+        Order allow,deny
+        Allow from all
+    </Directory>
+
+    # Optional cut alias here
+
+    LogLevel warn
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+</VirtualHost>"
+fi
 
 
 # =============================================================================
