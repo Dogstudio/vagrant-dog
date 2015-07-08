@@ -13,19 +13,15 @@
 vagrant.json
 
 # Composer
-public/vendor
+dev/public/vendor
 vagrant/vendor
 
 # Emulsion
-public/files/library/**/_mini
-public/files/logs/
-public/files/cache/
-public/files/config/config.xml
-public/.htaccess
+dev/public/files/library/
+dev/public/files/log/
+dev/public/files/cache/
 
 # CUTS
 .sass-cache/
 node_modules/
 
-# MAMP dev
-.htaccess
