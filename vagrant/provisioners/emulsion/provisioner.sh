@@ -14,7 +14,8 @@
 
 PROJECT_HOST=$1
 PROJECT_ROOT=$2
-PROJECT_NAME=$( echo $PROJECT_HOST | sed -e 's/[A-Z]/\L&/g;s/-/_/g')
+PROJECT_CUT_ROOT=$( echo $PROJECT_ROOT | sed -e 's/\/dev/\/cut/g')
+PROJECT_NAME=$( echo $PROJECT_HOST | sed -e 's/[A-Z]/\L&/g;s/[\-\.]/_/g')
 
 LOG_FILE="/vagrant/.vagrant/deploy.log"
 README_FILE="/vagrant/README.md"
@@ -24,17 +25,18 @@ DB_DUMP_FILE="/vagrant/database/dump.sql"
 
 # SKELS
 
-VHOST_SKEL="<VirtualHost *:80>
+if [ -d "$PROJECT_CUT_ROOT" ]; then
+    VHOST_SKEL="<VirtualHost *:80>
     ServerAdmin webmaster@localhost
 
-    DocumentRoot /vagrant/dev/public
+    DocumentRoot $PROJECT_ROOT
 
     <Directory />
         Options FollowSymLinks
         AllowOverride None
     </Directory>
-    
-    <Directory /vagrant/dev/public/>
+
+    <Directory $PROJECT_ROOT>
         Options Indexes FollowSymLinks MultiViews
         AllowOverride All
         Order allow,deny
@@ -42,9 +44,17 @@ VHOST_SKEL="<VirtualHost *:80>
     </Directory>
 
     ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
-    <Directory \"/usr/lib/cgi-bin\">
+    <Directory /usr/lib/cgi-bin>
         AllowOverride None
         Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
+        Order allow,deny
+        Allow from all
+    </Directory>
+
+    Alias /cut $PROJECT_CUT_ROOT
+    <Directory $PROJECT_CUT_ROOT>
+        Options Indexes MultiViews FollowSymLinks
+        AllowOverride All
         Order allow,deny
         Allow from all
     </Directory>
@@ -53,15 +63,41 @@ VHOST_SKEL="<VirtualHost *:80>
     ErrorLog ${APACHE_LOG_DIR}/error.log
     CustomLog ${APACHE_LOG_DIR}/access.log combined
 
-    Alias \"/cut\" \"/vagrant/cut/public\"
-    <Directory \"/vagrant/cut/public\">
-        Options Indexes MultiViews FollowSymLinks
+</VirtualHost>"
+else
+    VHOST_SKEL="<VirtualHost *:80>
+    ServerAdmin webmaster@localhost
+
+    DocumentRoot $PROJECT_ROOT
+
+    <Directory />
+        Options FollowSymLinks
+        AllowOverride None
+    </Directory>
+
+    <Directory $PROJECT_ROOT>
+        Options Indexes FollowSymLinks MultiViews
         AllowOverride All
+        Order allow,deny
+        allow from all
+    </Directory>
+
+    ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
+    <Directory /usr/lib/cgi-bin>
+        AllowOverride None
+        Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
         Order allow,deny
         Allow from all
     </Directory>
-</VirtualHost>"
 
+    # Optional cut alias here
+
+    LogLevel warn
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+</VirtualHost>"
+fi
 
 
 # =============================================================================
@@ -240,7 +276,7 @@ sed -i -e '/bind-address/s/^/# /' /etc/mysql/my.cnf >>$LOG_FILE 2>&1 &&
 service mysql restart >>$LOG_FILE 2>&1 &&
 echo_success $SLINE || echo_failure $SLINE
 
-SLINE="\t- Create database : ${PROJECT_NAME,,}"
+SLINE="\t- Create database : ${PROJECT_NAME}"
 
 mysql -u"root" -p"${DB_ROOT_PASS}" <<EOF
 CREATE USER 'vagrant'@'localhost' IDENTIFIED BY 'vagrant';
@@ -248,13 +284,13 @@ CREATE USER 'vagrant'@'%' IDENTIFIED BY 'vagrant';
 GRANT ALL PRIVILEGES ON *.* TO 'vagrant'@'localhost';
 GRANT ALL PRIVILEGES ON *.* TO 'vagrant'@'%';
 FLUSH PRIVILEGES;
-CREATE DATABASE IF NOT EXISTS \`${PROJECT_NAME,,}\` CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci';
+CREATE DATABASE IF NOT EXISTS \`${PROJECT_NAME}\` CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci';
 EOF
 
 
 if [ -e "$DB_DUMP_FILE" ]; then
     SLINE="\t- Populate DB with old dump."
-    mysql -u"root" -p"${DB_ROOT_PASS}" "${PROJECT_NAME,,}" < $DB_DUMP_FILE 2>&1 &&
+    mysql -u"root" -p"${DB_ROOT_PASS}" "${PROJECT_NAME}" < $DB_DUMP_FILE 2>&1 &&
     echo_success $SLINE || echo_failure $SLINE
 fi
 
@@ -284,7 +320,7 @@ if [[ ! -f /etc/apache2/apache2.conf ]]; then
     VHOST_SKEL=$(eval "echo -e \"$(echo -e "$VHOST_SKEL" | sed -e 's/##/$/g')\"")
 
     pushd /etc/apache2/sites-available >>$LOG_FILE &&
-    cp default default.back && echo "$VHOST_DEV_SKEL" > default
+    cp default default.back && echo "$VHOST_SKEL" > default
     echo_success $SLINE || echo_failure $SLINE
 
     # Restart Apache
