@@ -47,7 +47,7 @@ sudo ./install >>$LOG_FILE 2>&1 && echo_success $SLINE || echo_failure $SLINE &&
 
 SLINE="\t- Adding extension"
 echo "extension=phalcon.so" >> /etc/php5/apache2/php.ini >>$LOG_FILE 2>&1
-cat /vagrant/vagrant/phalcon/phalcon.ini >> /etc/php5/mods-available/phalcon.ini && >>$LOG_FILE 2>&1 && echo_success $SLINE || echo_failure $SLINE &&
+cat /vagrant/vagrant/provisioners/phalcon/phalcon.ini >> /etc/php5/mods-available/phalcon.ini && >>$LOG_FILE 2>&1 && echo_success $SLINE || echo_failure $SLINE &&
 
 sudo ln -s /etc/php5/mods-available/phalcon.ini /etc/php5/apache/conf.d/phalcon.ini >>$LOG_FILE 2>&1
 sudo ln -s /etc/php5/mods-available/phalcon.ini /etc/php5/cli/conf.d/phalcon.ini >>$LOG_FILE 2>&1
