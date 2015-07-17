@@ -14,10 +14,14 @@
 
 PROJECT_HOST=$1
 PROJECT_ROOT=$2
-PROJECT_CUT_ROOT=$( echo $PROJECT_ROOT | sed -e 's/\/dev/\/cut/g')
+
+PROJECT_DEV_ROOT="${PROJECT_ROOT}/dev/public"
+PROJECT_CUT_ROOT="${PROJECT_ROOT}/cut/public"
+
 PROJECT_NAME=$( echo $PROJECT_HOST | sed -e 's/[A-Z]/\L&/g;s/[\-\.]/_/g')
 
 LOG_FILE="/vagrant/.vagrant/deploy.log"
+APACHE_LOG_DIR="/vagrant/.vagrant/" 
 README_FILE="/vagrant/README.md"
 DB_ROOT_PASS="vagrant"
 DB_DUMP_FILE="/vagrant/database/dump.sql"
@@ -29,16 +33,17 @@ if [ -d "$PROJECT_CUT_ROOT" ]; then
     VHOST_SKEL="<VirtualHost *:80>
     ServerAdmin webmaster@localhost
 
-    DocumentRoot $PROJECT_ROOT
+    DocumentRoot $PROJECT_DEV_ROOT
 
     <Directory />
         Options FollowSymLinks
         AllowOverride None
     </Directory>
 
-    <Directory $PROJECT_ROOT>
+    <Directory $PROJECT_DEV_ROOT>
         Options Indexes FollowSymLinks MultiViews
         AllowOverride All
+        Require all granted
         Order allow,deny
         allow from all
     </Directory>
@@ -55,6 +60,7 @@ if [ -d "$PROJECT_CUT_ROOT" ]; then
     <Directory $PROJECT_CUT_ROOT>
         Options Indexes MultiViews FollowSymLinks
         AllowOverride All
+        Require all granted
         Order allow,deny
         Allow from all
     </Directory>
@@ -68,16 +74,17 @@ else
     VHOST_SKEL="<VirtualHost *:80>
     ServerAdmin webmaster@localhost
 
-    DocumentRoot $PROJECT_ROOT
+    DocumentRoot $PROJECT_DEV_ROOT
 
     <Directory />
         Options FollowSymLinks
         AllowOverride None
     </Directory>
 
-    <Directory $PROJECT_ROOT>
+    <Directory $PROJECT_DEV_ROOT>
         Options Indexes FollowSymLinks MultiViews
         AllowOverride All
+        Require all granted
         Order allow,deny
         allow from all
     </Directory>
@@ -86,6 +93,7 @@ else
     <Directory /usr/lib/cgi-bin>
         AllowOverride None
         Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
+        Require all granted
         Order allow,deny
         Allow from all
     </Directory>
@@ -145,7 +153,7 @@ EOF
 # Update and package list
 echo_line "${SEP}"
 
-apt-get -yq update >>$LOG_FILE 2>&1 && #apt-get -yq upgrade >>$LOG_FILE 2>&1 &&
+apt-get -yq update >>$LOG_FILE 2>&1 &&
 echo_success "System Updated" || process_end 1 "Unable to update the system"
 
 # =============================================================================
@@ -210,7 +218,7 @@ SLINE="\t- Default vHost"
 VHOST_SKEL=$(eval "echo -e \"$(echo -e "$VHOST_SKEL" | sed -e 's/##/$/g')\"")
 
 pushd /etc/apache2/sites-available >>$LOG_FILE &&
-cp default default.back && echo "$VHOST_SKEL" > default
+cp 000-default.conf default.back && echo "$VHOST_SKEL" > 000-default.conf
 echo_success $SLINE || echo_failure $SLINE
 
 # Restart Apache
