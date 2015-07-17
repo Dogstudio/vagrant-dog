@@ -1,8 +1,8 @@
 {
   "name": "Vagrant Box",
 
-  "box_name": "wheezy64",
-  "box_url": "http://vagrantbox.dogstudio.be/debian-wheezy64.box",
+  "box_name": "VagrantDog",
+  "box_url": "http://vagrantbox.dogstudio.be/vagrantdog.box",
   "path": "/vagrant/dev/public/",
 
   "host": "vagrantbox.dev",
