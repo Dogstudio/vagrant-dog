@@ -1,12 +1,11 @@
 {
-  "name": "Vagrant Box",
+  "name": "Vagrant Box Project",
 
   "box_name": "VagrantDog",
   "box_url": "http://vagrantbox.dogstudio.be/vagrantdog.box",
   
   "host": "vagrantbox.dev",
   "private_ip": "10.0.1.9",
-  "public_ip": 200,
 
   "provision": [
     "vagrant/provisioners/vagrantdog/provisioner.sh"

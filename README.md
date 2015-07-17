@@ -32,7 +32,7 @@ Le fichier JSON permet de fournir les paramètres spécifiques à la VM:
 * `box_url` : permet de télécharger la BOX, si pas déjà présente sur le système (option)
 * `name` : nom du projet
 * `host` : nom de l'hôte pour tester l'application
-* `path` : chemin vers la racine du site (option, default: "/vagrant/public")
+* `path` : chemin vers la racine du projet (option, default: "/vagrant/")
 * `private_ip` : adresse IP privée **Obligatoire**
 * `public_ip` : adresse IP public (accessible depuis l'extérieur).
 * `provision` : **tableau** reprenant les chemins des scripts (SH) de provisioning.
@@ -40,7 +40,7 @@ Le fichier JSON permet de fournir les paramètres spécifiques à la VM:
 ## database/dump.sql
 
 Un dossier database se trouvant à la racine du projet permet, si il contient un fichier appelé **dump.sql**,
-d'importer automatiquement les données dans la base de données créée automatiquement par le provisioner emulsion.
+d'importer automatiquement les données dans la base de données créée par le provisioner "VagrantDog".
 
 ### PublicIP
 
@@ -79,9 +79,8 @@ La première commande permet d'extraire les fichiers du projet "Vagrant" à la r
 
 ## Provisioners additionnels
 
-Les provisioners additionnels se trouvent le dossier vagrant.
-
-Exemple : vagrant/mailcatcher
+Les provisioners additionnels se trouvent le dossier `vagrant/provisioners`.  
+Exemple : `vagrant/provisioners/mailcatcher/provisioner.sh
 
 Le dossier doit comporter au minimum :
 
