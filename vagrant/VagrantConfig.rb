@@ -130,8 +130,16 @@ class VagrantConfig
             vb.gui = settings["gui"] ||= false
         end
 
-        # Some port forwarding
-        config.vm.network "forwarded_port", guest: 3306, host: 33060
+        # Some port forwarding (from config)
+        if settings.has_key?('ports') 
+            ports = Hash[ settings['ports'].map { |guest, host| [guest, host] } ]
+
+            ports.each do |forwarded_port|
+                config.vm.network "forwarded_port", guest: forwarded_port[0], host: forwarded_port[1]
+            end
+        else
+            config.vm.network "forwarded_port", guest: 3306, host: 33060
+        end
     end
 
     # -------------------------------------------------------------------------
