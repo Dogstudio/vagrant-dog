@@ -168,6 +168,8 @@ if [[ -z $(which mysql) ]]; then
     sed -i -e '/bind-address/s/^/# /' /etc/mysql/my.cnf >>$LOG_FILE 2>&1 &&
     service mysql restart >>$LOG_FILE 2>&1 &&
     echo_success $SLINE || echo_failure $SLINE
+else
+    echo_success "\t- Already installed"
 fi
 
 SLINE="\t- Create database : ${PROJECT_NAME}"
@@ -217,6 +219,8 @@ if [[ ! -f /etc/apache2/apache2.conf ]]; then
     SLINE="\t- Restart"
     /etc/init.d/apache2 restart >>$LOG_FILE 2>&1 &&
     echo_success $SLINE || echo_failure $SLINE
+else
+    echo_success "\t- Already installed"
 fi
 
 # PHP
@@ -230,7 +234,10 @@ if [[ -z $(which php) ]]; then
     SLINE="\t- Configure"
     sed -i -e "/display_errors/s/Off/On/" /etc/php5/apache2/php.ini >>$LOG_FILE 2>&1 &&
     echo_success $SLINE || echo_failure $SLINE
-if
+else
+    echo_success "\t- Already installed"
+fi
+
 
 # =============================================================================
 
