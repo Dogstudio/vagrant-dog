@@ -35,16 +35,33 @@ function askcontinue {
 # Get current script
 SCRIPT_URL="git@gitlab.dogstudio.be:devtools/vagrantdog.git"
 SCRIPT_BRANCH="develop"
-SCRIPT_PATH=$(cd `dirname "${BASH_SOURCE[0]}"` && pwd -P)
+SCRIPT_PATH=$(cd `dirname "${BASH_SOURCE[0]}/../"` && pwd -P)
+BACKUP_FILES="README.md vagrant.json"
 
 # Install from remote 
 if [[ $(basename $0) != "install.sh" ]]; then
-    echo -e "\tDownloading"
+
+    echo -en "\t- Backuping existing files"
+    for FILE in $BACKUP_FILES; do
+        if [[ -e ${SCRIPT_PATH}/$FILE ]]; then
+            cp ${SCRIPT_PATH}/README.md ${SCRIPT_PATH}/README.md.back
+        fi
+    done
+
+    echo -en "\t- Downloading VagrantDog"
     git archive --remote $SCRIPT_URL $SCRIPT_BRANCH | tar -x -C ./ && bash vagrant/install.sh
 
 # Install localy
 else
-    echo "URL: ${SCRIPT_URL}"
-    echo "PATH: ${SCRIPT_PATH}"
 
+    echo -en "\t- Restoring files"
+    for FILE in $(ls ${SCRIPT_PATH}/**/*.back); do
+        mv -f "$FILE" "${FILE%%.back}"
+    done
+
+    # if confirm "Want configure your project : " ; then
+    #     PROJECT_NAME=$(askcontinue "Enter the project name : ")
+    #     PROJECT_IP_PRIVATE=$(askcontinue "Enter the private IP (default: 10.0.1.9) : ")
+    #     PROJECT_IP_PUBLIC=$(askcontinue "Enter the private IP (ex: 192.168.1.200 ou 200) : ")
+    # fi
 fi
