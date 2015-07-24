@@ -40,7 +40,7 @@ SCRIPT_PATH=$(cd `dirname "${BASH_SOURCE[0]}"` && pwd -P)
 # Install from remote 
 if [[ $(basename $0) != "install.sh" ]]; then
     echo -e "\tDownloading"
-    git archive --remote $SCRIPT_URL $SCRIPT_BRANCH | tar -x -C ./ && bash install.sh
+    git archive --remote $SCRIPT_URL $SCRIPT_BRANCH | tar -x -C ./ && bash vagrant/install.sh
 
 # Install localy
 else
