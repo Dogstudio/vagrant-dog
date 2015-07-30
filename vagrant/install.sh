@@ -7,10 +7,11 @@
 #
 # =============================================================================
 
-SEP="$(printf '%0.1s' "-"{1..80})"$'\n'
+DEFAULT_PRIVATE_IP="10.0.0.9"
 
 # -----------------------------------------------------------------------------
 
+SEP="$(printf '%0.1s' "-"{1..80})"$'\n'
 function echo_success { echo -ne "$1\033[70G\033[0;39m[   \033[1;32mOK\033[0;39m    ]\n"; }
 function echo_failure { echo -ne "$1\033[70G\033[0;39m[ \033[1;31mFAILED\033[0;39m  ]\n"; }
 
@@ -59,9 +60,12 @@ else
         mv -f "$FILE" "${FILE%%.back}"
     done
 
+    echo -en "\t- Remove Gitkeep files"
+    find . -name ".gitkeep" -exec rm {} \;
+
     # if confirm "Want configure your project : " ; then
     #     PROJECT_NAME=$(askcontinue "Enter the project name : ")
-    #     PROJECT_IP_PRIVATE=$(askcontinue "Enter the private IP (default: 10.0.1.9) : ")
-    #     PROJECT_IP_PUBLIC=$(askcontinue "Enter the private IP (ex: 192.168.1.200 ou 200) : ")
+    #     PROJECT_IP_PRIVATE=$(askcontinue "Enter the private IP (default: ${DEFAULT_PRIVATE_IP}) : ")
+    #     PROJECT_IP_PUBLIC=$(askcontinue "Enter the public IP (ex: 192.168.1.200 ou 200) : ")
     # fi
 fi
