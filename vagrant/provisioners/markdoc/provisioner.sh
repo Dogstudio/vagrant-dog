@@ -27,7 +27,7 @@ echo_line "${SEP}"
 
 pushd /tmp >>$LOG_FILE 2>&1
 
-echo_line "Apaxy for DirectoryIndex"
+echo_line "DirectoryIndex"
 
 SLINE="\t- Install Fancydir"
 mkdir -p /usr/share/apache2/apaxy/ &&
@@ -44,5 +44,36 @@ cp $PROV_PATH/autoindex.conf /etc/apache2/mods-available &&
 a2enmod autoindex >>$LOG_FILE 2>&1 && 
 service apache2 restart >>$LOG_FILE 2>&1 &&
 echo_success $SLINE || echo_failure
+
+# -----------------------------------------------------------------------------
+
+echo_line "Markdown \"Pandoc\" Render"
+
+SLINE="\t- Install Pandoc"
+wget https://github.com/jgm/pandoc/releases/download/1.15.0.6/pandoc-1.15.0.6-1-amd64.deb >>$LOG_FILE 2>&1 &&
+dpkg -i pandoc-1.15.0.6-1-amd64.deb >>$LOG_FILE 2>&1 &&
+echo_success $SLINE || echo_failure
+
+SLINE="\t- Install Apache Pandoc"
+wget https://github.com/chdemko/apache-pandoc/archive/master.zip && 
+unzip master.zip && cd apache-pandoc-master/ &&
+cp etc/httpd/conf.d/pandoc.conf /etc/apache2/conf-available/ && 
+cp -r $PROV_PATH/apache-pandoc.ini /etc/ &&
+cp -r usr/* /usr/ && 
+sudo a2enconf pandoc &&
+echo_success $SLINE || echo_failure
+
+
+
+SLINE="\t- Enable mods"
+a2enmod cgi >>$LOG_FILE 2>&1 && 
+a2enmod actions >>$LOG_FILE 2>&1 && 
+a2enmod cgid >>$LOG_FILE 2>&1 && 
+service apache2 restart
+echo_success $SLINE || echo_failure
+
+
+
+
 
 popd >>$LOG_FILE 2>&1
