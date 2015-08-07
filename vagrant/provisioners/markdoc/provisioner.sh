@@ -27,6 +27,8 @@ echo_line "${SEP}"
 
 pushd /tmp >>$LOG_FILE 2>&1
 
+# -----------------------------------------------------------------------------
+
 echo_line "DirectoryIndex (with Fancydir)"
 
 SLINE="\t- Install Fancydir"

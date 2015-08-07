@@ -17,9 +17,7 @@
 
 html {
 	min-height:100%;
-	border-top:10px solid #ECEEF1;
-	border-bottom:10px solid #ECEEF1;
-	color:#61666c;
+	color: #333;
 	font-weight:400;
 	font-size:1em;
 	font-family:'Open Sans', sans-serif;
