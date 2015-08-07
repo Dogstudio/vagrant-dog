@@ -49,14 +49,20 @@ echo_success $SLINE || echo_failure
 
 echo_line "Markdown Render (with Pandoc)"
 
-SLINE="\t- Install Pandoc"
-wget https://github.com/jgm/pandoc/releases/download/1.15.0.6/pandoc-1.15.0.6-1-amd64.deb >>$LOG_FILE 2>&1 &&
-dpkg -i pandoc-1.15.0.6-1-amd64.deb >>$LOG_FILE 2>&1 &&
-echo_success $SLINE || echo_failure
+if [ -z "$(which pandoc)" ]; then
+
+    SLINE="\t- Install Pandoc"
+    wget https://github.com/jgm/pandoc/releases/download/1.15.0.6/pandoc-1.15.0.6-1-amd64.deb >>$LOG_FILE 2>&1 &&
+    dpkg -i pandoc-1.15.0.6-1-amd64.deb >>$LOG_FILE 2>&1 &&
+    echo_success $SLINE || echo_failure
+
+fi  
+
 
 SLINE="\t- Install Apache Pandoc"
 cp -r $PROV_PATH/pandoc/etc/* /etc/ &&
 cp -r $PROV_PATH/pandoc/usr/* /usr/ &&
+chmod a+x /usr/share/apache-pandoc/pandoc.py >>$LOG_FILE 2>&1 &&
 sudo a2enconf pandoc >>$LOG_FILE 2>&1 &&
 echo_success $SLINE || echo_failure
 
@@ -69,8 +75,7 @@ echo_success $SLINE || echo_failure
 
 # -----------------------------------------------------------------------------
 
-if [ -d "/vagrant/doc" ]; then
-    echo_line "Markdown Render (with Pandoc)"
+if [ -d /vagrant/doc ]; then
 
     SLINE="\t- Add \"doc\" alias for Apache"
     sed -i '/LogLevel/i\

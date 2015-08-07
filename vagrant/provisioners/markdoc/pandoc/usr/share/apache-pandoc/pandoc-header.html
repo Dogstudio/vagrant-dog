@@ -1,42 +1,52 @@
 <style>
+body {
+    margin-left: 240px;
+}
 #toc {
     top: 0px;
     left: 0px;
     height: 100%;
     position: fixed;
-    background: #F4F4F4;
-    box-shadow: inset -5px 0 5px 0px #000;
-    width: 150px;
+    background: #333;
+    box-shadow: inset -1px 0px 2px -1px #000;
+    width: 200px;
     padding-top: 20px;
-    color: #333;
+    color: #F0F0F0;
 }
 
 #toc ul {
     margin: 0;
-    padding: 0;
     list-style: none;
+    padding: 0;
 }
 
 #toc li {
-    padding: 5px 10px;
+    padding: 0 8px;
+    margin: 0 !important;
 }
 
 #toc a {
-    color: #333;
+    color: #F0F0F0;
     text-decoration: none;
     display: block;
+    padding: 4px 0;
+}
+
+#toc .toc-h1 {
+    font-size: 1.1em;
 }
 
 #toc .toc-h2 {
-    padding-left: 10px;
+    padding-left: 18px;
 }
 
 #toc .toc-h3 {
-    padding-left: 20px;
+    font-size: 0.8em;
+    padding-left: 32px;
 }
 
 #toc .toc-active {
-    background: #336699;
-    box-shadow: inset -5px 0px 10px -5px #000;
+    background: #4183C4;
+    box-shadow: inset -1px 0px 2px -1px #000;
 }
 </style>
