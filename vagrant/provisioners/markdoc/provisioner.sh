@@ -77,21 +77,22 @@ echo_success $SLINE || echo_failure
 
 # -----------------------------------------------------------------------------
 
-if [ -d /vagrant/doc ]; then
-
-    SLINE="\t- Add \"doc\" alias for Apache"
-    sed -i '/LogLevel/i\
-    Alias \/doc \/vagrant\/doc\/\
-    <Directory \/vagrant\/doc>\
-        Options Indexes\
-        AllowOverride All\
-        Require all granted\
-        Order allow,deny\
-        Allow from all\
-    <\/Directory>\
-    ' /etc/apache2/sites-available/000-default.conf >>$LOG_FILE 2>&1 &&
-    service apache2 restart >>$LOG_FILE 2>&1 &&
-    echo_success $SLINE || echo_failure
+if [ ! -d /vagrant/doc ]; then
+    mkdir -p /vagrant/doc
 fi
+
+SLINE="\t- Add \"doc\" alias for Apache"
+sed -i '/LogLevel/i\
+Alias \/doc \/vagrant\/doc\/\
+<Directory \/vagrant\/doc>\
+    Options Indexes\
+    AllowOverride All\
+    Require all granted\
+    Order allow,deny\
+    Allow from all\
+<\/Directory>\
+' /etc/apache2/sites-available/000-default.conf >>$LOG_FILE 2>&1 &&
+service apache2 restart >>$LOG_FILE 2>&1 &&
+echo_success $SLINE || echo_failure
 
 popd >>$LOG_FILE 2>&1
