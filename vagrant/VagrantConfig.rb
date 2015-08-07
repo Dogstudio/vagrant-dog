@@ -100,10 +100,8 @@ class VagrantConfig
                 else
                     @config.vm.network "public_network", bridge: bridge[1], ip: public_ip
                 end
-
             else
-                @config.vm.network "public_network", bridge: bridge[1], ip: self.getMachineIp(200, bridge[0])
-
+                @config.vm.network "public_network", bridge: bridge[1], ip: self.getMachineIp(public_ip, bridge[0])
             end
         end
 
@@ -139,6 +137,7 @@ class VagrantConfig
             end
         else
             config.vm.network "forwarded_port", guest: 3306, host: 33060
+            config.vm.network "forwarded_port", guest: 1080, host: 10800
         end
     end
 
