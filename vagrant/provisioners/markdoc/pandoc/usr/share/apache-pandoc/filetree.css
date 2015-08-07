@@ -1,0 +1,97 @@
+#dir {
+    bottom: 0px;
+    position: fixed;
+    background: #FFF;
+    width: inherit;
+    padding: 20px 0; 
+    border-top: 1px dotted #CCC;
+}
+
+#dir ul {
+    padding: 0 8px;
+    margin: 4px 0;
+}
+
+#dir ul li {
+    list-style: none;
+    padding: 0px;
+    padding-left: 20px;
+    margin: 0px ;
+    white-space: nowrap;
+}
+
+#dir ul a {
+    color: #333;
+    text-decoration: none;
+    display: block;
+    padding: 0px 2px;
+}
+
+#dir ul a:hover {
+    background: #BDF;
+}
+
+/* Core Styles */
+#dir .directory { background: url(/apaxy/theme/icons/folder.png) left top no-repeat; }
+#dir .expanded { background: url(/apaxy/theme/icons/folder-open.png) left top no-repeat; }
+#dir .file { background: url(/apaxy/theme/icons/default.png) left top no-repeat; }
+#dir .wait { background: url(/pandoc/images/spinner.gif) left top no-repeat; }
+/* File Extensions*/
+#dir .ext_3gp { background: url(/apaxy/theme/icons/video.png) left top no-repeat; }
+#dir .ext_afp { background: url(/apaxy/theme/icons/source.png) left top no-repeat; }
+#dir .ext_afpa { background: url(/apaxy/theme/icons/source.png) left top no-repeat; }
+#dir .ext_asp { background: url(/apaxy/theme/icons/source.png) left top no-repeat; }
+#dir .ext_aspx { background: url(/apaxy/theme/icons/source.png) left top no-repeat; }
+#dir .ext_avi { background: url(/apaxy/theme/icons/video.png) left top no-repeat; }
+#dir .ext_bat { background: url(/apaxy/theme/icons/exe.png) left top no-repeat; }
+#dir .ext_bmp { background: url(/apaxy/theme/icons/image.png) left top no-repeat; }
+#dir .ext_c { background: url(/apaxy/theme/icons/code.png) left top no-repeat; }
+#dir .ext_cfm { background: url(/apaxy/theme/icons/code.png) left top no-repeat; }
+#dir .ext_cgi { background: url(/apaxy/theme/icons/code.png) left top no-repeat; }
+#dir .ext_com { background: url(/apaxy/theme/icons/exe.png) left top no-repeat; }
+#dir .ext_cpp { background: url(/apaxy/theme/icons/code.png) left top no-repeat; }
+#dir .ext_css { background: url(/apaxy/theme/icons/css.png) left top no-repeat; }
+#dir .ext_doc { background: url(/apaxy/theme/icons/doc.png) left top no-repeat; }
+#dir .ext_exe { background: url(/apaxy/theme/icons/exe.png) left top no-repeat; }
+#dir .ext_gif { background: url(/apaxy/theme/icons/gif.png) left top no-repeat; }
+#dir .ext_fla { background: url(/apaxy/theme/icons/flash.png) left top no-repeat; }
+#dir .ext_h { background: url(/apaxy/theme/icons/h.png) left top no-repeat; }
+#dir .ext_htm { background: url(/apaxy/theme/icons/html.png) left top no-repeat; }
+#dir .ext_html { background: url(/apaxy/theme/icons/html.png) left top no-repeat; }
+#dir .ext_jar { background: url(/apaxy/theme/icons/java.png) left top no-repeat; }
+#dir .ext_jpg { background: url(/apaxy/theme/icons/jpg.png) left top no-repeat; }
+#dir .ext_jpeg { background: url(/apaxy/theme/icons/jpg.png) left top no-repeat; }
+#dir .ext_js { background: url(/apaxy/theme/icons/js.png) left top no-repeat; }
+#dir .ext_lasso { background: url(/apaxy/theme/icons/code.png) left top no-repeat; }
+#dir .ext_log { background: url(/apaxy/theme/icons/log.png) left top no-repeat; }
+#dir .ext_m4p { background: url(/apaxy/theme/icons/playlist.png) left top no-repeat; }
+#dir .ext_mov { background: url(/apaxy/theme/icons/video.png) left top no-repeat; }
+#dir .ext_mp3 { background: url(/apaxy/theme/icons/playlist.png) left top no-repeat; }
+#dir .ext_mp4 { background: url(/apaxy/theme/icons/video.png) left top no-repeat; }
+#dir .ext_mpg { background: url(/apaxy/theme/icons/video.png) left top no-repeat; }
+#dir .ext_mpeg { background: url(/apaxy/theme/icons/video.png) left top no-repeat; }
+#dir .ext_ogg { background: url(/apaxy/theme/icons/playlist.png) left top no-repeat; }
+#dir .ext_pcx { background: url(/apaxy/theme/icons/image.png) left top no-repeat; }
+#dir .ext_pdf { background: url(/apaxy/theme/icons/pdf.png) left top no-repeat; }
+#dir .ext_php { background: url(/apaxy/theme/icons/php.png) left top no-repeat; }
+#dir .ext_png { background: url(/apaxy/theme/icons/image.png) left top no-repeat; }
+#dir .ext_ppt { background: url(/apaxy/theme/icons/pres.png) left top no-repeat; }
+#dir .ext_psd { background: url(/apaxy/theme/icons/psd.png) left top no-repeat; }
+#dir .ext_pl { background: url(/apaxy/theme/icons/script.png) left top no-repeat; }
+#dir .ext_py { background: url(/apaxy/theme/icons/py.png) left top no-repeat; }
+#dir .ext_rb { background: url(/apaxy/theme/icons/rb.png) left top no-repeat; }
+#dir .ext_rbx { background: url(/apaxy/theme/icons/rb.png) left top no-repeat; }
+#dir .ext_rhtml { background: url(/apaxy/theme/icons/rb.png) left top no-repeat; }
+#dir .ext_rpm { background: url(/apaxy/theme/icons/package.png) left top no-repeat; }
+#dir .ext_ruby { background: url(/apaxy/theme/icons/rb.png) left top no-repeat; }
+#dir .ext_sql { background: url(/apaxy/theme/icons/sql.png) left top no-repeat; }
+#dir .ext_swf { background: url(/apaxy/theme/icons/flash.png) left top no-repeat; }
+#dir .ext_tif { background: url(/apaxy/theme/icons/image.png) left top no-repeat; }
+#dir .ext_tiff { background: url(/apaxy/theme/icons/image.png) left top no-repeat; }
+#dir .ext_txt { background: url(/apaxy/theme/icons/txt.png) left top no-repeat; }
+#dir .ext_vb { background: url(/apaxy/theme/icons/code.png) left top no-repeat; }
+#dir .ext_wav { background: url(/apaxy/theme/icons/playlist.png) left top no-repeat; }
+#dir .ext_wmv { background: url(/apaxy/theme/icons/video.png) left top no-repeat; }
+#dir .ext_xls { background: url(/apaxy/theme/icons/xls.png) left top no-repeat; }
+#dir .ext_xml { background: url(/apaxy/theme/icons/code.png) left top no-repeat; }
+#dir .ext_zip { background: url(/apaxy/theme/icons/package.png) left top no-repeat; }
