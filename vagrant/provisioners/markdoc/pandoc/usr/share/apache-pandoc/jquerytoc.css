@@ -1,0 +1,44 @@
+#toc {   
+}
+
+#toc ul {
+    margin: 0;
+    list-style: none;
+    padding: 0;
+}
+
+#toc li {
+    padding: 0 8px;
+    margin: 0 !important;
+}
+
+#toc a {
+    color: #333;
+    text-decoration: none;
+    display: block;
+    padding: 4px 0;
+}
+
+#toc a:hover {
+    color: #4183C4;
+    text-decoration: none;
+}
+
+#toc .toc-h1 {
+    font-size: 1.1em;
+    font-weight: 600;
+    border-bottom: 1px dotted #CCC;
+}
+
+#toc .toc-h2 {
+    padding-left: 24px;
+}
+
+#toc .toc-h3 {
+    font-size: 0.8em;
+    padding-left: 32px;
+}
+
+#toc .toc-active {
+    color: #4183C4;
+}

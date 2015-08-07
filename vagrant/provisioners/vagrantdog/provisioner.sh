@@ -15,8 +15,8 @@
 PROJECT_HOST=$1
 PROJECT_ROOT=$2
 
-PROJECT_DEV_ROOT="${PROJECT_ROOT}/dev/public"
-PROJECT_CUT_ROOT="${PROJECT_ROOT}/cut/public"
+PROJECT_DEV_ROOT="${PROJECT_ROOT}dev/public"
+PROJECT_CUT_ROOT="${PROJECT_ROOT}cut/public"
 
 PROJECT_NAME=$( echo $PROJECT_HOST | sed -e 's/[A-Z]/\L&/g;s/[\-\.]/_/g')
 
@@ -66,8 +66,8 @@ if [ -d "$PROJECT_CUT_ROOT" ]; then
     </Directory>
 
     LogLevel warn
-    ErrorLog ${APACHE_LOG_DIR}/error.log
-    CustomLog ${APACHE_LOG_DIR}/access.log combined
+    ErrorLog ${APACHE_LOG_DIR}error.log
+    CustomLog ${APACHE_LOG_DIR}access.log combined
 
 </VirtualHost>"
 else
@@ -97,8 +97,6 @@ else
         Order allow,deny
         Allow from all
     </Directory>
-
-    # Optional cut alias here
 
     LogLevel warn
     ErrorLog ${APACHE_LOG_DIR}/error.log
@@ -161,7 +159,8 @@ echo_success "System Updated" || process_end 1 "Unable to update the system"
 # MySQL
 echo_line "MySQL"
 
-if [[ -z $(which mysql) ]]; then
+if [ -z "$(which mysql)" ]; then
+
     SLINE="\t- Installation"
 
     debconf-set-selections <<< "mysql-server mysql-server/root_password password $DB_ROOT_PASS"
@@ -176,6 +175,7 @@ if [[ -z $(which mysql) ]]; then
     sed -i -e '/bind-address/s/^/# /' /etc/mysql/my.cnf >>$LOG_FILE 2>&1 &&
     service mysql restart >>$LOG_FILE 2>&1 &&
     echo_success $SLINE || echo_failure $SLINE
+    
 fi
 
 SLINE="\t- Create database : ${PROJECT_NAME}"
@@ -191,15 +191,17 @@ EOF
 
 
 if [ -e "$DB_DUMP_FILE" ]; then
-    SLINE="\t- Populate DB with old dump."
+
+    SLINE="\t- Populate DB with \"${DB_DUMP_FILE}\"."
     mysql -u"root" -p"${DB_ROOT_PASS}" "${PROJECT_NAME}" < $DB_DUMP_FILE 2>&1 &&
     echo_success $SLINE || echo_failure $SLINE
+
 fi
 
 # Apache2 (Pouwa)
 echo_line "Apache2"
 
-if [[ ! -f /etc/apache2/apache2.conf ]]; then
+if [ ! -f /etc/apache2/apache2.conf ]; then
     
     SLINE="\t- Installation"
     apt-get install -y apache2 apache2-doc apache2-mpm-prefork apache2-utils libexpat1 ssl-cert >>$LOG_FILE 2>&1 &&
@@ -212,13 +214,13 @@ if [[ ! -f /etc/apache2/apache2.conf ]]; then
     echo "EnableSendfile Off" > /etc/apache2/conf.d/vagrant &&
     /etc/init.d/apache2 restart >>$LOG_FILE 2>&1 &&
     echo_success $SLINE || echo_failure $SLINE
+
 fi
 
 SLINE="\t- Default vHost"
 VHOST_SKEL=$(eval "echo -e \"$(echo -e "$VHOST_SKEL" | sed -e 's/##/$/g')\"")
-
 pushd /etc/apache2/sites-available >>$LOG_FILE &&
-cp 000-default.conf default.back && echo "$VHOST_SKEL" > 000-default.conf
+echo "$VHOST_SKEL" > 000-default.conf
 echo_success $SLINE || echo_failure $SLINE
 
 # Restart Apache
@@ -229,7 +231,8 @@ echo_success $SLINE || echo_failure $SLINE
 # PHP
 echo_line "PHP"
 
-if [[ -z $(which php) ]]; then
+if [ -z "$(which php)" ]; then
+
     SLINE="\t- Install"
     apt-get install -y libapache2-mod-php5 php5-common php5-mysql php5-curl php5-gd php5-mcrypt php5-cli >>$LOG_FILE 2>&1 &&
     echo_success $SLINE || echo_failure $SLINE
@@ -237,6 +240,7 @@ if [[ -z $(which php) ]]; then
     SLINE="\t- Configure"
     sed -i -e "/display_errors/s/Off/On/" /etc/php5/apache2/php.ini >>$LOG_FILE 2>&1 &&
     echo_success $SLINE || echo_failure $SLINE
+
 fi
 
 
@@ -245,13 +249,14 @@ fi
 # Composer / Project
 echo_line "Composer & Project"
 
-if [[ -z $(which composer) ]]; then
+if [ -z "$(which composer)" ]; then
     
     SLINE="\t- Install composer"
     curl -sS https://getcomposer.org/installer | php >>$LOG_FILE 2>&1 &&
     chmod a+x composer.phar >>$LOG_FILE 2>&1 &&
     mv composer.phar /usr/local/bin/composer >>$LOG_FILE 2>&1 &&
     echo_success $SLINE || echo_failure $SLINE
+
 fi
 
 SLINE="\t- Project"
