@@ -82,7 +82,7 @@ if [ ! -d /vagrant/doc ]; then
 fi
 
 SLINE="\t- Add \"doc\" alias for Apache"
-sed -i '/LogLevel/i\
+sed -i '/OTHERALIAS/i\
 Alias \/doc \/vagrant\/doc\/\
 <Directory \/vagrant\/doc>\
     Options Indexes\

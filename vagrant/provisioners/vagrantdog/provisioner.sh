@@ -1,11 +1,11 @@
 #!/bin/bash
 #
-# Vagrant Provisionner for PHP Dev
+# Vagrant Provisioner for PHP Dev
 #   - Apache
 #   - MySQL
 #   - PHP-fpm
 #
-# @author   Akarun for KRKN <akarun@krkn.be> and Passtech <akarun@passtech.be>
+# @author   Thierry 'Epagneul' Lagasse <epagneul@dogstudio.be>
 # @since    August 2014
 #
 # =============================================================================
@@ -29,18 +29,18 @@ DB_DUMP_FILE="/vagrant/database/dump.sql"
 
 # SKELS
 
-if [ -d "$PROJECT_CUT_ROOT" ]; then
-    VHOST_SKEL="<VirtualHost *:80>
+VHOST_SKEL="<VirtualHost *:80>
     ServerAdmin webmaster@localhost
 
-    DocumentRoot $PROJECT_DEV_ROOT
+    ServerName ##PROJECT_NAME
+    DocumentRoot ##PROJECT_DEV_ROOT
 
     <Directory />
         Options FollowSymLinks
         AllowOverride None
     </Directory>
 
-    <Directory $PROJECT_DEV_ROOT>
+    <Directory ##PROJECT_DEV_ROOT>
         Options Indexes FollowSymLinks MultiViews
         AllowOverride All
         Require all granted
@@ -56,55 +56,21 @@ if [ -d "$PROJECT_CUT_ROOT" ]; then
         Allow from all
     </Directory>
 
-    Alias /cut $PROJECT_CUT_ROOT
-    <Directory $PROJECT_CUT_ROOT>
+    ##VHOST_ALIAS_CUT
+
+    # OTHERALIAS
+</VirtualHost>"
+
+VHOST_ALIAS_CUT="
+    Alias /cut ##PROJECT_CUT_ROOT
+    <Directory ##PROJECT_CUT_ROOT>
         Options Indexes MultiViews FollowSymLinks
         AllowOverride All
         Require all granted
         Order allow,deny
         Allow from all
     </Directory>
-
-    LogLevel warn
-    ErrorLog ${APACHE_LOG_DIR}error.log
-    CustomLog ${APACHE_LOG_DIR}access.log combined
-
-</VirtualHost>"
-else
-    VHOST_SKEL="<VirtualHost *:80>
-    ServerAdmin webmaster@localhost
-
-    DocumentRoot $PROJECT_DEV_ROOT
-
-    <Directory />
-        Options FollowSymLinks
-        AllowOverride None
-    </Directory>
-
-    <Directory $PROJECT_DEV_ROOT>
-        Options Indexes FollowSymLinks MultiViews
-        AllowOverride All
-        Require all granted
-        Order allow,deny
-        allow from all
-    </Directory>
-
-    ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
-    <Directory /usr/lib/cgi-bin>
-        AllowOverride None
-        Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
-        Require all granted
-        Order allow,deny
-        Allow from all
-    </Directory>
-
-    LogLevel warn
-    ErrorLog ${APACHE_LOG_DIR}/error.log
-    CustomLog ${APACHE_LOG_DIR}/access.log combined
-
-</VirtualHost>"
-fi
-
+"
 
 # =============================================================================
 
@@ -198,6 +164,8 @@ if [ -e "$DB_DUMP_FILE" ]; then
 
 fi
 
+# =============================================================================
+
 # Apache2 (Pouwa)
 echo_line "Apache2"
 
@@ -210,23 +178,37 @@ if [ ! -f /etc/apache2/apache2.conf ]; then
     SLINE="\t- Configuration"
     a2enmod rewrite >>$LOG_FILE 2>&1 &&
     sed -i -e '/HostnameLookups/s/On/Off/' /etc/apache2/apache2.conf &&
-    sed -i -e '/^#AddDefaultCharset/s/#//' /etc/apache2/conf.d/charset &&
-    echo "EnableSendfile Off" > /etc/apache2/conf.d/vagrant &&
+    echo "EnableSendfile Off" > /etc/apache2/conf-enabled/vagrant.conf &&
     /etc/init.d/apache2 restart >>$LOG_FILE 2>&1 &&
     echo_success $SLINE || echo_failure $SLINE
 
 fi
 
+# Prepare Alias for CUT
+if [ -d "$PROJECT_CUT_ROOT" ]; then
+
+    SLINE="\t- Prepare alias for \"CUTs\""
+    VHOST_ALIAS_CUT=$(eval "echo -e \"$(echo -e "$VHOST_ALIAS_CUT" | sed -e 's/##/$/g')\"")
+    echo_success $SLINE || echo_failure $SLINE
+
+else
+    VHOST_ALIAS_CUT=''
+    
+fi
+
+# vHost
 SLINE="\t- Default vHost"
 VHOST_SKEL=$(eval "echo -e \"$(echo -e "$VHOST_SKEL" | sed -e 's/##/$/g')\"")
 pushd /etc/apache2/sites-available >>$LOG_FILE &&
-echo "$VHOST_SKEL" > 000-default.conf
+echo "$VHOST_SKEL" > 000-default.conf &&
 echo_success $SLINE || echo_failure $SLINE
 
 # Restart Apache
 SLINE="\t- Restart"
 /etc/init.d/apache2 restart >>$LOG_FILE 2>&1 &&
 echo_success $SLINE || echo_failure $SLINE
+
+# =============================================================================
 
 # PHP
 echo_line "PHP"
