@@ -10,10 +10,13 @@
 #
 # =============================================================================
 
-PROJECT_NAME=$( echo $1 | sed -e 's/[A-Z]/\L&/g;s/ /_/g')
-PROJECT_HOST=$2
-PROJECT_ROOT=$3
-PRIVATE_IP=$4
+PROJECT_HOST=$1
+PROJECT_ROOT=$2
+
+PROJECT_DEV_ROOT="${PROJECT_ROOT}dev/public"
+PROJECT_CUT_ROOT="${PROJECT_ROOT}cut/public"
+
+PROJECT_NAME=$( echo $PROJECT_HOST | sed -e 's/[A-Z]/\L&/g;s/[\-\.]/_/g')
 
 LOG_FILE="/vagrant/.vagrant/deploy.log"
 
