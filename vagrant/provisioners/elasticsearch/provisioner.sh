@@ -15,8 +15,6 @@ PROJECT_HOST=$2
 PROJECT_ROOT=$3
 
 LOG_FILE="/vagrant/.vagrant/deploy.log"
-DB_ROOT_PASS="vagrant"
-DB_DUMP_FILE="/vagrant/.vagrant/dump.sql"
 
 # =============================================================================
 

@@ -203,6 +203,13 @@ pushd /etc/apache2/sites-available >>$LOG_FILE &&
 echo "$VHOST_SKEL" > 000-default.conf &&
 echo_success $SLINE || echo_failure $SLINE
 
+# Service priority
+SLINE="\t- Change startup priority"
+for LINK in $(find /etc/rc*.d -name "S*apache*"); do 
+    mv $LINK $(dirname $LINK)/S10apache2; done >>$LOG_FILE
+done
+echo_success $SLINE || echo_failure $SLINE
+
 # Restart Apache
 SLINE="\t- Restart"
 /etc/init.d/apache2 restart >>$LOG_FILE 2>&1 &&
