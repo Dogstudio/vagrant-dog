@@ -21,7 +21,7 @@ PROJECT_CUT_ROOT="${PROJECT_ROOT}cut/public"
 PROJECT_NAME=$( echo $PROJECT_HOST | sed -e 's/[A-Z]/\L&/g;s/[\-\.]/_/g')
 
 LOG_FILE="/vagrant/.vagrant/deploy.log"
-APACHE_LOG_DIR="/vagrant/.vagrant/" 
+APACHE_LOG_DIR="/var/log/apache2/" 
 README_FILE="/vagrant/README.md"
 DB_ROOT_PASS="vagrant"
 DB_DUMP_FILE="/vagrant/database/dump.sql"
