@@ -21,7 +21,7 @@ PROJECT_CUT_ROOT="${PROJECT_ROOT}cut/public"
 PROJECT_NAME=$( echo $PROJECT_HOST | sed -e 's/[A-Z]/\L&/g;s/[\-\.]/_/g')
 
 LOG_FILE="/vagrant/.vagrant/deploy.log"
-APACHE_LOG_DIR="/var/log/apache2/" 
+APACHE_LOG_DIR="/var/log/apache2/"
 README_FILE="/vagrant/README.md"
 DB_ROOT_PASS="vagrant"
 DB_DUMP_FILE="/vagrant/database/dump.sql"
@@ -88,11 +88,11 @@ function process_end {
 
     if (( $# > 0 )); then
         echo_failure "ERROR($1) : $2" ; exit 1
-        
+
     else
         echo_line "Current IPs :"
         ifconfig | awk -v RS="\n\n" '{ for (i=1; i<=NF; i++) if ($i == "inet" && $(i+1) ~ /^addr:/) address = substr($(i+1), 6); if (address != "127.0.0.1") printf "\r\040\040\040\040%s --> %s\n", $1, address; }'
-        
+
         echo_success "Deploy completed !"
     fi
 
@@ -141,7 +141,7 @@ if [ -z "$(which mysql)" ]; then
     sed -i -e '/bind-address/s/^/# /' /etc/mysql/my.cnf >>$LOG_FILE 2>&1 &&
     service mysql restart >>$LOG_FILE 2>&1 &&
     echo_success $SLINE || echo_failure $SLINE
-    
+
 fi
 
 SLINE="\t- Create database : ${PROJECT_NAME}"
@@ -170,11 +170,11 @@ fi
 echo_line "Apache2"
 
 if [ ! -f /etc/apache2/apache2.conf ]; then
-    
+
     SLINE="\t- Installation"
     apt-get install -y apache2 apache2-doc apache2-mpm-prefork apache2-utils libexpat1 ssl-cert >>$LOG_FILE 2>&1 &&
     echo_success $SLINE || echo_failure $SLINE
-    
+
     SLINE="\t- Configuration"
     a2enmod rewrite >>$LOG_FILE 2>&1 &&
     sed -i -e '/HostnameLookups/s/On/Off/' /etc/apache2/apache2.conf &&
@@ -193,7 +193,7 @@ if [ -d "$PROJECT_CUT_ROOT" ]; then
 
 else
     VHOST_ALIAS_CUT=''
-    
+
 fi
 
 # vHost
@@ -205,8 +205,8 @@ echo_success $SLINE || echo_failure $SLINE
 
 # Service priority
 SLINE="\t- Change startup priority"
-for LINK in $(find /etc/rc*.d -name "S*apache*"); do 
-    mv $LINK $(dirname $LINK)/S10apache2; done >>$LOG_FILE
+for LINK in $(find /etc/rc*.d -name "S*apache*"); do
+    mv $LINK $(dirname $LINK)/S10apache2 >>$LOG_FILE
 done
 echo_success $SLINE || echo_failure $SLINE
 
@@ -239,7 +239,7 @@ fi
 echo_line "Composer & Project"
 
 if [ -z "$(which composer)" ]; then
-    
+
     SLINE="\t- Install composer"
     curl -sS https://getcomposer.org/installer | php >>$LOG_FILE 2>&1 &&
     chmod a+x composer.phar >>$LOG_FILE 2>&1 &&
