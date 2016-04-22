@@ -6,15 +6,12 @@ _Vagrantfile_ and _Boxes_ for Dogstudio projects.
 
 > You must copy the source files and edit the JSON configuration.
 
-So, because we don't need to keep this project in GIT, we start to export source files in the project root folder.
-
-    git archive --remote #GIT_URL#/vagrantdog.git master | tar -x -C ./
-
-In the `vagrant`folder, we edit the configuration file `sample.json` (see below for details).
+Because we don't need to keep this project in GIT, start by download the ZIP and extract the source files in the root folder.
+In the `vagrant`folder, edit the configuration file `sample.json` (see below for details).
 
     vim vagrant/sample.json
 
-After that, we make a copy of this file in the root folder and rename it as `vagrant.json`.
+After that, make a copy of this file in the root folder and rename it as `vagrant.json`.
 
     cp vagrant/sample.json vagrant.json
 
