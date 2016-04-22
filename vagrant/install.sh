@@ -62,10 +62,4 @@ else
 
     echo -en "\t- Remove Gitkeep files"
     find . -name ".gitkeep" -exec rm {} \;
-
-    # if confirm "Want configure your project : " ; then
-    #     PROJECT_NAME=$(askcontinue "Enter the project name : ")
-    #     PROJECT_IP_PRIVATE=$(askcontinue "Enter the private IP (default: ${DEFAULT_PRIVATE_IP}) : ")
-    #     PROJECT_IP_PUBLIC=$(askcontinue "Enter the public IP (ex: 192.168.1.200 ou 200) : ")
-    # fi
 fi
