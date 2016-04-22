@@ -1,12 +1,8 @@
-# Vargant for Dogs
-
-## Opcache for php
-
-#### Introduction
+# Vargant for Dogs - Opcache for php
 
 Caching opcode (storing precompiled script)
 
-#### Installation
+## Installation
 
 * Ajouter "vagrant/opcache/provisioner.sh" dans la propriété "provision" du fichier vagrant.json
 Comment the parameter named : opcache.validate_timestamps for production

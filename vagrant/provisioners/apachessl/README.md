@@ -1,19 +1,15 @@
-# Vagrant for Dogs
-
-## SSL mod for Apache2
-
-#### Introduction
+# Vagrant for Dogs - SSL mod for Apache2
 
 This provisioner enables the SSL support on your vagrant box. Enjoy !
 
-#### Installation
+## Installation
 
-* Simply add the provisioner to your vagrant.json : "vagrant/apachessl/provisioner.sh"
+* Simply add the provisioner to your vagrant.json : "vagrant/provisioners/apachessl/provisioner.sh"
 
 ```json
 "provision": [
-    "vagrant/VagrantEmulsion.sh",
-    "vagrant/apachessl/provisioner.sh"
+    "vagrant/provisioners/vagrantdog/provisioner.sh",
+    "vagrant/provisioners/apachessl/provisioner.sh"
 ]
 ```
 

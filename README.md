@@ -1,98 +1,76 @@
 # Vagrant for Dogs
 
-_Vagrantfile_ et _Boxes_ pour le développement des projets.
+_Vagrantfile_ and _Boxes_ for Dogstudio projects.
 
-## Utilisation
+## Usage
 
-> Il suffit de copier les fichiers et de modifier la configuration JSON.
+> You must copy the source files and edit the JSON configuration.
 
-Comme on a pas besoin du versionning de ce projet, on commence par exporter les fichiers à la racine de notre projet.
+So, because we don't need to keep this project in GIT, we start to export source files in the project root folder.
 
-    git archive --remote git@gitlab.dogstudio.be:devtools/vagrantdog.git master | tar -x -C ./
+    git archive --remote #GIT_URL#/vagrantdog.git master | tar -x -C ./
 
-Dans le répertoire `vagrant`, on adapte les paramètres du fichier `sample.json` (voir plus bas pour les détails).
+In the `vagrant`folder, we edit the configuration file `sample.json` (see below for details).
 
     vim vagrant/sample.json
 
-Ensuite, on effectue une copie du fichier à la racine en le renommant `vagrant.json`.
+After that, we make a copy of this file in the root folder and rename it as `vagrant.json`.
 
     cp vagrant/sample.json vagrant.json
 
-Ce nouveau fichier **ne doit pas être inclus dans le dépôt** de notre projet ; il est propre à chaque DEV.
-
-Une fois les sources du projet installées, il ne reste plus qu'à démarrer la VM:
+This new file is your personal environnement and don't need to put un the new repo.
+Put your project source in `dev` folder (`dev/public` is the web root) and state the VM:
 
     vagrant up
 
 ## Vagrant.JSON
 
-Le fichier JSON permet de fournir les paramètres spécifiques à la VM:
+This JSON file provide specific parameters for your virtual machine :
 
-* `box_name` : nom de la BOX vagrant (option, default: "laravel/homestead")
-* `box_url` : permet de télécharger la BOX, si pas déjà présente sur le système (option)
-* `name` : nom du projet
-* `host` : nom de l'hôte pour tester l'application
-* `path` : chemin vers la racine du projet (option, default: "/vagrant/")
-* `private_ip` : adresse IP privée **Obligatoire**
-* `public_ip` : adresse IP public (accessible depuis l'extérieur).
-* `provision` : **tableau** reprenant les chemins des scripts (SH) de provisioning.
+* `box_name` : the vagrant BOX name you use. (optional, default: "VagrantDog")
+* `box_url` : the URL to download the BOX (for the first time). (optional)
+* `name` : the name of your project
+* `host` : the host name to test your project
+* `path` : the path to the web root (option, default: "/dev/public/")
+* `private_ip` : a private IP address (**mandatory**)
+* `public_ip` : a public IP address (to test your project with external device).
+* `provision` : **array** with provisioning script paths (.sh).
 
 ## database/dump.sql
 
-Un dossier database se trouvant à la racine du projet permet, si il contient un fichier appelé **dump.sql**,
-d'importer automatiquement les données dans la base de données créée par le provisioner "VagrantDog".
+If you have file named `database/dump.sql`, it will be automaticly injected in the database
+when you provision your virtual machine for the 1st time.
 
 ### PublicIP
 
-Pour l'adresse IP publique, il est possible de spécifier un entier, ex: 123 (au lieu d'une IP).
+To provide public IP, you can specify an **interger** instead of a IP. (ex: 123).
 
-Dans ce cas, le script détectera l'adresse IP de l'hôte et utilisera l'entier pour générer l'adresse publique dans le même range que l'hôte.
-C'est particulièrement utile dans le cas des laptops qui change de range réseau et de bridge suivant l'endroit de connexion.
+In this case, the provisoner script will detect the host IP and use it to generate an adresse in the same range with the integer for the last part.
+It's very usefull when your are mobile and your IP range change according your location.
 
-_Ex:_
+_For example:_
 
 * `public_ip` : 200
-* Détection de l'inteface de l'hôte : `en0: Wifi Airport`
-* Détection de l'adresse de l'hôte : `10.0.0.45`
-* Générer l'adresse : `10.0.0.200`
+* Detection of your host main network interface: `en0: Wifi Airport`
+* Detection of the host IP address: `10.0.0.45`
+* Generate your VM public IP  : `10.0.0.200`
 
-## Alias
+## Additional provisioners
 
-Pour faciliter l'utilisation, on peut ajouter les commandes Vagrant au `.bashrc` (ou `.bash_aliases`)
+You can find some additional provisioners in `vagrant/provisioners`.  
+Example : `vagrant/provisioners/mailcatcher/provisioner.sh
 
-_Il suffit de copier/coller cette commande complète dans le terminal._
+For each one, the provisoner folder must contains at least:
 
-```bash
-echo "\n#Vagrant
-alias vup='vagrant up'
-alias vhalt='vagrant halt'
-alias vdestroy='vagrant destroy'
-alias vrestart='vhalt && vup'
-alias vssh='vagrant ssh'
-alias vstate='vagrant global-status'" >> ~/.bashrc
-source ~/.bashrc
-```
+* A `provisioner.sh` file
+* A `README.md` file that explain what that provisioner do.
 
-La première commande permet d'extraire les fichiers du projet "Vagrant" à la racine du projet ; on peut également l'ajouter en tant qu'Alias :
-
-    echo "git archive --remote git@gitlab.dogstudio.be:devtools/vagrantdog.git master | tar -x -C ./" >> ~/.bashrc && source ~/.bashrc
-
-## Provisioners additionnels
-
-Les provisioners additionnels se trouvent le dossier `vagrant/provisioners`.  
-Exemple : `vagrant/provisioners/mailcatcher/provisioner.sh
-
-Le dossier doit comporter au minimum :
-
-* un fichier provisioner.sh
-* un fichier README.md décrivant au mieux ce qu'apporte ce provisioner (port du service installé, ...)
-
-Pour utiliser un provisioner additionnel, il faut l'ajouter dans le tableau 'provision' du fichier vagrant.json
+To use this provisionaer, you just need to add his path in the `provision` array of `vagrant.json`
 
 ```json
 "provision": [
-    "vagrant/VagrantEmulsion.sh",
-    "vagrant/mailcatcher/provisioner.sh" <== permet d'ajouter mailcatcher à la vagrant
+    "vagrant/provisioners/vagrantdog/provisioner.sh",
+    "vagrant/provisioners/mailcatcher/provisioner.sh"
 ]
 ```
 

@@ -1,9 +1,0 @@
-{
-  "require": {
-    "symfony/console": "3.0.*@dev",
-    "symfony/process": "3.0.*@dev"
-  },
-  "autoload": {
-    "psr-4": {"Commands\\": "commands/"}
-  }
-}
